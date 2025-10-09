@@ -1,0 +1,109 @@
+.about-page {
+  max-width: 1200px;
+  margin: 48px auto;
+  padding: 0 16px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.about-title {
+  font-size: 4rem;
+  color: #222;
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.about-underline {
+  width: 140px;
+  height: 8px;
+  background: #d81b60;
+  border-radius: 4px;
+  margin: 10px 0 18px 0;
+}
+
+.about-card {
+  background: #fff0f6;
+  border-radius: 20px;
+  box-shadow: 0 2px 16px rgba(216, 27, 96, 0.06);
+  padding: 32px 18px 18px 18px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.about-col {
+  flex: 1 1 0;
+}
+
+.about-col-title {
+  color: #d81b60;
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: 1.2px;
+}
+
+.about-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  font-size: 1.45rem;
+  margin-bottom: 3px;
+  color: #222;
+  gap: 7px;
+  font-weight: 400;
+}
+
+.about-col:nth-child(2) .about-row {
+  gap: 4px;
+}
+
+.about-row b {
+  color: #222;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.about-address {
+  font-style: italic;
+}
+
+.about-link {
+  color: #7b1fa2;
+  text-decoration: none;
+  font-size: 1.25rem;
+  word-break: break-word;
+  font-weight: 500;
+}
+
+.about-link:hover {
+  text-decoration: underline;
+}
+
+.about-icon {
+  margin-right: 5px;
+  font-size: 1.3em;
+}
+
+@media (max-width: 900px) {
+  .about-card {
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 4px 8px 4px;
+  }
+
+  .about-col {
+    min-width: 0;
+  }
+
+  .about-title {
+    font-size: 2.5rem;
+  }
+
+  .about-underline {
+    width: 80px;
+    height: 4px;
+    margin: 6px 0 10px 0;
+  }
+}

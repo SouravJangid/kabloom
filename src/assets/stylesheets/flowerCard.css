@@ -1,0 +1,116 @@
+/* Container for all flower cards */
+.flowercardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  background-color: #fefaf6;
+  padding: 20px;
+  position: relative;
+}
+
+/* Shop section header styles */
+.shop-header-wrapper {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.shop-header {
+  font-size: 3rem;
+  margin: 0;
+  padding: 0 16px;
+  color: #222;
+}
+
+.shop-underline {
+  width: 60px;
+  height: 5px;
+  background: #d81b60;
+  margin: 4px 16px 20px;
+  border-radius: 10px;
+}
+
+/* Flower card styles */
+.flowercard {
+  width: 250px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flowercard:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+/* Product image */
+.flowercardImg {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+/* Product name */
+.flowercardName {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #222;
+  padding: 10px 12px 0;
+  text-align: center;
+  line-height: 1.4;
+  min-height: 48px;
+}
+
+/* Product price */
+.flowercardPrice {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #d32c2c;
+  padding: 6px 12px 0;
+  font-style: italic;
+  align-self: center;
+}
+
+/* Truck icon */
+.truckIcon {
+  margin-top: 7px;
+  margin-right: 7px;
+  font-size: 17px;
+  color: #555;
+}
+
+/* Speed text */
+.speedText {
+  font-size: 13px;
+}
+
+/* Oval badge */
+.speedBadge {
+  padding: 3px 10px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  color: #444;
+  background-color: #fff;
+}
+
+/* Speed badge container */
+.flowercardSpeed {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 8px;
+}

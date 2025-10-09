@@ -1,0 +1,62 @@
+stages:
+  - build
+  
+before_script:
+  - export PATH=$PATH:/home/gitlab-runner/.nvm/versions/node/v12.18.3/bin 
+
+dev-build:
+  tags:
+    - dev-kabloom-drinksbucket-frontend
+  only: 
+    refs: 
+    - develop-drinksbucket  
+  stage: build
+  script:
+    - echo "DEV Build Starts ...."
+    - npm install
+    - CI=false npm run-script build:dev
+    - echo "DEV Build Ends ...."
+    - echo "DEV deployment starts "
+    - echo "Delete OLD build File"
+    - sudo rm -rf /home/ubuntu/devuicodebase/db-usa-front-end/build/
+    - sudo cp -r build/ /home/ubuntu/devuicodebase/db-usa-front-end/
+    - echo "Copied the Build File"
+    - echo "DEV deployment ends "
+
+uat-build:
+  tags:
+    - uat-kabloom-drinksbucket-frontend
+  only: 
+    refs: 
+    - uat-drinksbucket  
+  stage: build
+  script:
+    - echo "UAT Build Starts ...."
+    - npm install
+    - CI=false npm run-script build:uat
+    - echo "UAT Build Ends ...."
+    - echo "UAT deployment starts "
+    - echo "Delete OLD build File"
+    - sudo rm -rf /home/ubuntu/uatuicodebase/db-usa-front-end/build/
+    - sudo cp -r build/ /home/ubuntu/uatuicodebase/db-usa-front-end/
+    - echo "Copied the Build File"
+    - echo "UAT deployment ends "
+
+prod-build:
+  tags:
+    - prod-kabloom-drinksbucket-frontend
+  only: 
+    refs: 
+    - prod-drinksbucket
+  stage: build
+  script:
+    - echo "Prod Build Starts ...."
+    - npm install
+    - CI=false npm run-script build
+    - echo "Prod Build Ends ...."
+    - echo "Prod deployment starts "
+    - echo "Delete OLD build File"
+    - sudo rm -rf /home/ubuntu/uicodebase/kabloom-frontend/build/
+    - sudo cp -r build/ /home/ubuntu/uicodebase/kabloom-frontend/
+    - echo "Copied the Build File"
+    - echo "UAT deployment ends "

@@ -1,0 +1,105 @@
+/* Main Header */
+.delivery-header {
+  font-size: 4rem;
+  font-weight: 800;
+  color: #4a235a;
+  margin: 50px 0 0 40px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Decorative Underline */
+.delivery-underline {
+  width: 200px;
+  height: 7px;
+  background-color: #d81b60;
+  border-radius: 6px;
+  margin: 14px 0 40px 40px;
+}
+
+/* Full-width Content Container */
+.delivery-info-centered {
+  width: 100%;
+  padding: 0 40px;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #333;
+}
+
+/* Section Headers */
+.delivery-info-centered h2 {
+  font-size: 3rem;
+  margin-top: 50px;
+  color: #7b1fa2;
+  border-bottom: 3px solid #e1bee7;
+  padding-bottom: 16px;
+  font-weight: 700;
+}
+
+/* Subheadings */
+.delivery-info-centered h3 {
+  margin-top: 48px;
+  font-size: 2.5rem;
+  color: #512da8;
+  font-weight: 700;
+}
+
+/* Paragraph Text */
+.delivery-paragraph {
+  margin-bottom: 24px;
+  font-size: 2rem;
+  line-height: 2.5;
+}
+
+/* Cities and ZIP Codes */
+.delivery-cities,
+.delivery-zips {
+  margin: 20px 0 36px 0;
+  font-size: 1.9rem;
+  line-height: 2.3;
+  word-break: break-word;
+}
+
+/* Section Highlights */
+.delivery-info-centered strong {
+  display: block;
+  margin-top: 28px;
+  font-size: 1.8rem;
+  color: #222;
+  font-weight: 800;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .delivery-header {
+    font-size: 3rem;
+    margin-left: 24px;
+  }
+
+  .delivery-underline {
+    margin-left: 24px;
+    width: 150px;
+  }
+
+  .delivery-info-centered {
+    padding: 0 20px;
+  }
+
+  .delivery-info-centered h2 {
+    font-size: 2.3rem;
+  }
+
+  .delivery-info-centered h3 {
+    font-size: 2.1rem;
+  }
+
+  .delivery-cities,
+  .delivery-zips,
+  .delivery-paragraph {
+    font-size: 1.7rem;
+    line-height: 2.2;
+  }
+
+  .delivery-info-centered strong {
+    font-size: 1.6rem;
+  }
+}

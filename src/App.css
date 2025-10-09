@@ -1,0 +1,80 @@
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hide number input spinners when class is applied to the input element */
+/* Hide number input spinners globally for all number inputs */
+input[type="number"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: textfield !important;
+  border: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  margin: 0 !important;
+}
+
+.btnA{
+  text-align: center !important;
+  justify-content: center !important;
+  height: 4.8rem !important;
+  border-radius: 0.5rem !important;
+  letter-spacing: 0.1rem !important;
+  line-height: 5rem !important;
+  padding: 0px 20px !important;
+  font-size: 1.5rem !important;
+  border: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  background-color: #E5554F !important;
+  color: #fff;
+}
+
+/* Disabled state for .btnA */
+.btnA:disabled,
+.btnA[disabled] {
+  /* background-color: #cccccc !important; */
+  /* color: #888888 !important; */
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+}

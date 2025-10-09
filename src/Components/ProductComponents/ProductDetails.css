@@ -1,0 +1,16 @@
+.productDeliverySection{
+    min-height:70px;
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+}
+.pdp-price{
+    min-width: 123px;
+    font-size: 20px;
+    margin: 5px 0 5px 0; 
+}
+/* .pdpFormSectionChildFirst{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+} */

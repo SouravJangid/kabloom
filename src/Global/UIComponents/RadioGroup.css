@@ -1,0 +1,91 @@
+.kb-radio-group {
+    width: 100%;
+}
+
+.kb-radio-group .kb-radio-group-label {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.kb-radio-group .kb-radio-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.kb-radio-row {
+    display: grid;
+    grid-template-columns: 100px 1fr; /* left column for label, right for controls */
+    grid-column-gap: 16px;
+    align-items: center;
+    flex-direction: row;
+}
+
+.kb-radio-row .kb-radio-list {
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.kb-radio-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive: stack label above controls on narrow screens */
+@media (max-width: 575px) {
+    .kb-radio-row {
+        grid-template-columns: 1fr;
+        grid-row-gap: 8px;
+    }
+}
+
+.kb-radio {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.kb-radio-input {
+    display: none;
+}
+
+.kb-radio-control {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #999;
+    border-radius: 50%;
+    margin-right: 8px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.kb-radio.is-selected .kb-radio-control {
+    border-color: #f63;
+}
+
+.kb-radio.is-selected .kb-radio-control::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: #f63;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.kb-radio-label {
+    font-size: 14px;
+}
+.kb-radio-input:disabled + .kb-radio-control {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.kb-radio-input:disabled ~ .kb-radio-label {
+  color: #aaa;
+  cursor: not-allowed;
+}
+

@@ -1,0 +1,911 @@
+@white     : #fff;
+@black     : #000;
+@red       : #890a0a;
+@blue      : #666ee8;
+@green     : #00a700;
+@gray      : #787878;
+@gray100   : #fbfbfb;
+@gray200   : #ebebeb;
+@gray300   : #b2b2b2;
+@gray400   : #999999;
+@gray500   : #7f7f7f;
+@gray600   : #666666;
+@gray700   : #4c4c4c;
+@gray800   : #333333;
+@primary   : #E5554F;
+@secondary : #00BFB2;
+
+@border-color: rgba(@black, .1);
+
+.textBlack {
+  color: @black;
+}
+
+.textRed {
+  color: @primary;
+}
+
+.textGreen {
+  color: #00bfb3;
+}
+
+.textBlue {
+  color: #1f00a1;
+}
+
+.divider {
+  background-color: @black;
+
+  @media(max-width:991px) {
+    background-color: transparent;
+  }
+}
+
+@-webkit-keyframes autofill {
+  to {
+    background: transparent;
+  }
+}
+
+body {
+  color           : @black  !important;
+  background-color: @white;
+}
+
+input,
+textarea,
+select form {
+  color           : @black  !important;
+  background-color: @white;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px @white inset;
+  transition        : background-color 5000s ease-in-out 0s;
+}
+
+.MuiInput-underline:before {
+  border-bottom: 1px solid @gray500  !important;
+}
+
+
+.forgotPassword {
+  color: @black;
+
+  &:hover {
+    color: @gray600;
+  }
+}
+
+
+.IntroSlider {
+
+  .carousel .slide,
+  .carousel .slide .legend {
+    background-color: transparent !important;
+  }
+}
+
+
+.ScrollbarsCustom-Track {
+  background: @gray800  !important;
+
+  .ScrollbarsCustom-Thumb {
+    background: rgba(@white, 0.5) !important;
+  }
+}
+
+
+
+.homeStylebg {
+  background-color: rgba(@white, 0.7);
+}
+
+.homeInputAddress {
+  input {
+    background-color: @white;
+    border          : 1px solid @gray500;
+  }
+
+  .Mui-error {
+    input {
+      box-shadow: inset 0px 0px 0px 1px @primary;
+      border    : 1px solid @primary;
+    }
+  }
+}
+
+.MuiFormLabel-root.label-txt {
+  color: rgba(@black, .9);
+}
+
+.locationTxt {
+  color: rgba(@black, .67);
+
+  &:hover {
+    color: @black;
+  }
+}
+
+.text-input.error {
+  p {
+    color: red;
+  }
+}
+
+.txtButton {
+  color: @black  !important;
+}
+
+.newsOffers {
+  .MuiCheckbox-colorSecondary.Mui-checked {
+    color: @black  !important;
+  }
+}
+
+.genderSelection {
+  .MuiRadio-colorSecondary.Mui-checked {
+    color: @black  !important;
+  }
+}
+
+
+
+.bottomActionbutton {
+  background-color: @primary  !important;
+
+  &.transiBtn {
+    background-color: rgba(@white, .1) !important;
+    color           : @white  !important;
+  }
+}
+
+.custom-switch {
+  .MuiSwitch-track {
+    background-color: transparent !important;
+    border          : solid 0.15rem @gray;
+  }
+
+  .Mui-checked+.MuiSwitch-track {
+    background-color: transparent !important;
+    border          : solid 0.15rem @green;
+  }
+
+  .MuiSwitch-thumb {
+    background-color: @gray;
+  }
+
+  .Mui-checked .MuiSwitch-thumb {
+    background-color: @green;
+
+    &:after {
+      color: @green;
+    }
+  }
+}
+
+
+.storeItemsList {
+  &:hover {
+    box-shadow: inset 0px 0px 5px 2px rgba(@black, 0.2);
+  }
+
+  .listPageAddcartbtn {
+    color           : @white;
+    background-color: @black;
+  }
+
+  .proSizes {
+    background-color: @white;
+
+    .btn {
+
+      &.active,
+      &:hover {
+        background-color: @red  !important;
+      }
+    }
+  }
+
+  .productName {
+    border-top: 1px solid rgba(@black, .1);
+  }
+
+  .dispalyPrice {
+    color: @red;
+  }
+
+  .availableSize {
+    color: @red;
+  }
+
+}
+
+
+.container-content-header {
+  @media(max-width:991.98px) {
+    box-shadow: 0px 2px 7px -1px @gray300;
+  }
+
+  .topNav {
+    border-bottom: 2px solid @border-color;
+
+    .navItems {
+      .navbar {
+        @media(max-width:991.98px) {
+          .navbarCollapse {
+            background-color: @white;
+          }
+        }
+
+        .navbarCollapse {
+          &>ul {
+            &>li {
+              &>a {
+                color: @black;
+
+                &:after {
+                  border-top: 4px solid @black;
+                }
+
+                &:before {
+                  background-color: @black;
+                 
+                }
+
+                &:hover {
+                  &:before {
+                    background-color: @black;
+                    @media(max-width:991.98px) {
+                      background-color: @white;
+                    }
+                  }
+                }
+              }
+
+              &.show>a {
+                &:before {
+                  background-color: @black;
+                }
+              }
+
+              .dropdownMenu {
+                background: transparent;
+
+                .fullWidthtopmenu {
+                  background-color: @white;
+                  box-shadow      : 0px 5px 6px -4px @gray500;
+
+                  @media(max-width:767px) {
+                    background-color: @gray100;
+                  }
+
+                  .menusColumn {
+                    border-right: 1px solid @gray200;
+
+                    h4 {
+                      color: rgba(@black, .6);
+                    }
+
+                    ul {
+                      li {
+                        a {
+                          color: @black;
+
+                          &:hover {
+                            background-color: rgba(@black, .03);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.navbar-toggler {
+  color: @black;
+
+  .navbar-toggler-icon,
+  .navbar-toggler-icon:before,
+  .navbar-toggler-icon:after {
+    background: @black;
+  }
+}
+
+.headerShippingAddress {
+  @media (max-width:991.98px) {
+    background-color: @gray100;
+  }
+}
+
+.icons {
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.topSearch {
+  input {
+    background-color: @gray200;
+  }
+}
+
+.topHeader {
+  background: @white;
+}
+
+.drinkText {
+  color: @white;
+}
+
+.footerLayout {
+  background-color: rgba(@black, .9);
+  color           : rgba(@white, .6);
+}
+
+.footerLink a {
+  color: @white;
+}
+
+.footerLink a:hover {
+  color: rgba(@white, 0.7);
+}
+
+.poweredLine {
+  color: @white;
+}
+
+
+.mobile-tabs-title {
+  background-color: rgba(@white, .1);
+}
+
+.product-tabs {
+  background-color: rgba(@black, .08);
+
+  .MuiTab-root {
+    color: @black;
+
+    &.Mui-selected {
+      background-color: #e5554f;
+      color           : @white;
+    }
+  }
+}
+
+.drop-option {
+  background-color: @white;
+  box-shadow      : 0px 2px 4px -2px @gray400;
+  border          : 1px solid rgba(@black, .1);
+
+  &:before {
+    border-bottom: 8px solid #dedede;
+  }
+
+  span.user {
+    border-bottom: 1px solid rgba(@white, 0.4);
+  }
+}
+
+.breadCrumb {
+  border-bottom: 1px solid rgba(@black, 0.04);
+
+  ul {
+    li {
+      color: @black;
+
+      &:before {
+        background-color: @black;
+      }
+
+      &:after {
+        background-color: @black;
+      }
+
+      a {
+        color: @black;
+      }
+    }
+  }
+}
+
+.proCategoryList {
+  .titleandFilterbar {
+    .filterIcon {
+      border: solid 1px @gray400;
+      color : @gray400;
+    }
+  }
+
+  .productCategoryList-wrapper {
+    .catFiltersection {
+      .clearAll {
+        border: solid 1px @gray400;
+        color : @gray400;
+      }
+
+      .filterInneritems {
+        @media(max-width:767px) {
+          background-color: @white;
+        }
+      }
+
+      @media(max-width:767px) {
+        &:after {
+          background-color: @gray500;
+        }
+
+        .closeFilterbtn {
+          color: @gray400;
+        }
+
+        .filterActionbtn {
+          background-color: @gray200;
+
+          .applyBtnfilter {
+            background-color: @primary  !important;
+            border-color    : @primary  !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.addQty {
+  span {
+    border: solid 1px @gray400;
+  }
+}
+
+.prostarRatings {
+  .reviewsBox {
+    background-color: rgba(@white, .2);
+  }
+
+  .dv-star-rating-star {
+    color: @black  !important;
+
+    &.dv-star-rating-empty-star {
+      -webkit-text-stroke-color: @black;
+    }
+  }
+
+  .listedRating {
+    .ReviewedBy {
+      color: rgba(@white, .6)
+    }
+
+    .dv-star-rating-star {
+      color: @primary  !important;
+    }
+  }
+}
+
+
+.OrderSettingsection {
+  .MuiExpansionPanelSummary-content.Mui-expanded {
+    .title {
+      color: @white  !important;
+    }
+  }
+
+  .MuiExpansionPanel-root {
+    background-color: rgba(@black, 0.03);
+
+    .MuiIconButton-label {
+      color: @black;
+    }
+
+    &.Mui-expanded {
+      background-color: @gray500  !important;
+      color           : @white;
+
+      .MuiIconButton-label {
+        color: @white;
+      }
+    }
+
+    .title {
+      color: @black;
+    }
+
+    &:hover {
+      background-color: rgba(@white, 1);
+
+      .title {
+        color: @black;
+      }
+    }
+  }
+
+  .itemsname {
+    color: @white;
+  }
+
+  .orderDetaillabel {
+    color: rgba(@white, 0.7);
+  }
+}
+
+
+.orderPlaced span {
+  color: @gray700;
+}
+
+b.orderNumber {
+  color: black;
+}
+
+.productImgSection {
+  &.proDetailSec {
+
+    .carousel .slide,
+    .carousel .slide .legend {
+      background-color: transparent !important;
+    }
+
+    .carousel .thumb {
+      border: 2px solid @black;
+    }
+
+    .carousel .thumb.selected,
+    .carousel .thumb:hover {
+      border: 2px solid @white  !important;
+    }
+  }
+
+}
+
+
+
+
+.cartActionBtn {
+  background-color: @primary  !important;
+
+  &:hover {
+    background-color: rgba(@primary, .9) !important;
+  }
+}
+
+.CardsWrapper {
+  .card {
+    color           : @black  !important;
+    background-color: transparent !important;
+
+    &.speedCardscontainer,
+    &.shippingCardscontainer,
+    &.retailerCardscontainer,
+    &.container {
+      color: @black  !important;
+    }
+
+    .cardStyles {
+      background-color: rgba(@black, .03) !important;
+
+      &.addressCards {
+        &:hover {
+          color: @white;
+        }
+
+        &.active {
+          color: @white;
+        }
+      }
+
+      &.paymentcard {
+
+        .cardBrand,
+        .CradNo,
+        .cardHolderName {
+          color: @white;
+        }
+
+        &:hover {
+          color: @white;
+        }
+
+        &.active {
+          color: @white;
+        }
+      }
+
+      &.addAddressCards {
+        &:hover {
+          color: @white;
+        }
+      }
+
+      &.addnewcard {
+        .myInfocolor {
+          color: @black;
+        }
+
+        &:hover {
+          color: rgba(@white, 0.5);
+
+          .myInfocolor {
+            color: @white;
+
+          }
+        }
+      }
+
+
+      &.userPreferenceSetting,
+      &.userInfoSettingCards {
+        color: @gray400;
+
+        &:hover {
+          color: @white;
+        }
+      }
+
+      .cardTitle,
+      .inner-content,
+      .cardPrice,
+      .retailerTitle,
+      .cardAddress,
+      .storeDistance {
+        color: @black;
+      }
+
+      &.active {
+        background-color: @gray600  !important;
+        color           : @white;
+
+        .cardTitle,
+        .retailerTitle,
+        .cardPrice,
+        .inner-content {
+          color: @white;
+        }
+      }
+
+      &:hover {
+        background-color: @gray800  !important;
+
+        .cardTitle,
+        .retailerTitle,
+        .cardPrice,
+        .inner-content {
+          color: @white;
+        }
+      }
+
+      &.disable {
+        background-color: @gray300  !important;
+
+        .cardTitle {
+          color: @black;
+        }
+      }
+
+    }
+
+
+  }
+}
+
+.ingredientsList {
+  .card {
+    background-color: transparent !important;
+  }
+
+  .ingredientLabel {
+    color: @white;
+  }
+}
+
+.css-1wa3eu0-placeholder {
+  color: @gray400  !important
+}
+
+.css-tlfecz-indicatorContainer,
+.css-1gtu0rj-indicatorContainer {
+  color: @gray800  !important;
+}
+
+.css-j9ijlg-control,
+.css-1nom80r-control {
+  border-bottom: 1px solid @gray500  !important;
+}
+
+.css-1gtu0rj-indicatorContainer:hover {
+  color: @gray800  !important;
+}
+
+.cartContainer .CartItemParent .cartItemChild {
+  background: rgba(@black, .05) !important;
+  color     : @black;
+}
+
+
+
+.driverTip {
+  button {
+    border          : solid 1px @gray400;
+    color           : @gray500;
+    background-color: rgba(@white, 0.4);
+
+    &:hover {
+      background-color: rgba(@white, 1);
+      color           : @black;
+    }
+  }
+}
+
+.cartContainer {
+  color: @black;
+
+  .CartItemParent {
+    .cartItemChild {
+      background: #6EA2C2;
+      box-shadow: 0 4px 8px 0 @gray300;
+    }
+  }
+
+  .couponParent .form-control {
+    background: @gray500;
+    color     : @white  !important;
+  }
+
+  input::placeholder {
+    color: rgba(@white, 0.6);
+  }
+}
+
+
+.applyBtn {
+  background-color: @gray800  !important;
+}
+
+.addNewCC {
+  background: rgba(@black, .03);
+
+  input.cardHolderName,
+  .StripeElement,
+  .StripeElementIdeal,
+  .StripeElementFpx {
+    background   : transparent !important;
+    border-bottom: solid 1px @gray500;
+    color        : @black  !important;
+  }
+
+}
+
+.ElementsApp,
+.ElementsApp,
+.InputElement,
+.InputElement.is-invalid {
+  color: @white  !important;
+}
+
+
+.userChatcard {
+  background-color: @white  !important;
+}
+
+.serverChatcard {
+  background-color: @secondary  !important;
+  color           : @white  !important;
+}
+
+.container-content-section .search-panel {
+
+  .searchItembar {
+    background: transparent;
+    color     : @white  !important;
+  }
+
+  ::-webkit-input-placeholder {
+    color: @gray400;
+  }
+
+}
+
+.StripeCard {
+
+  label {
+    color: @black
+  }
+
+  button {
+    box-shadow      : 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(@black, 0.08);
+    color           : @white;
+    background-color: #6772e5;
+  }
+
+  button:hover {
+    color           : @white;
+    background-color: #7795f8;
+    box-shadow      : 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(@black, 0.08);
+  }
+
+  input {
+    box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px,
+      rgba(@black, 0.0196078) 0px 1px 0px;
+    background: white;
+    color     : black !important;
+  }
+
+  input::placeholder {
+    color: #aab7c4;
+  }
+
+  .error {
+    color: @red;
+  }
+
+  .result {
+    color: @blue;
+  }
+
+  .StripeElement,
+  .StripeElementIdeal,
+  .StripeElementFpx {
+    box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px,
+      rgba(@black, 0.0196078) 0px 1px 0px;
+    background: white;
+  }
+
+  .StripeElement--focus,
+  .StripeElementIdeal--focus,
+  .StripeElementFpx--focus {
+    box-shadow: rgba(50, 50, 93, 0.109804) 0px 4px 6px,
+      rgba(@black, 0.0784314) 0px 1px 3px;
+  }
+}
+
+.datePicker {
+  .form-control:focus {
+    background: transparent !important;
+  }
+
+  input {
+    background   : transparent;
+    border-bottom: 1px solid @black;
+  }
+}
+
+.KYC-Container{
+  .AppId{
+    border:solid 1px @gray500;
+  }
+}
+
+.timestyle{
+  color: #E5554F!important;
+  font-family: 'Muli_SemiBold';
+  font-size: 1.3rem!important;
+  border-color: #E5554F!important;
+  margin-right: 5px!important;
+  background-color: #fff!important;  
+  &:hover
+  {
+    color: #E5554F!important;
+    background-color: #ebebeb!important;
+  }
+}
+.timestyle.btn-success
+  {
+    background-color: #666666!important;
+    color: #fff!important;
+    border-color: #666666!important;
+  }

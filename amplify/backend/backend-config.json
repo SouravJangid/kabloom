@@ -1,0 +1,64 @@
+{
+  "auth": {
+    "zoodrinkindiaamplify9640d7a3": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
+  "storage": {
+    "s3eb0f72d9": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  },
+  "function": {
+    "zoodrinkindiaamplify1c2b398b": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "s3eb0f72d9",
+          "attributes": [
+            "BucketName"
+          ]
+        }
+      ]
+    }
+  },
+  "api": {
+    "zoodrinkindiaamplify": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 365,
+              "description": ""
+            }
+          },
+          "additionalAuthenticationProviders": []
+        }
+      }
+    },
+    "verifyFaces": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "zoodrinkindiaamplify1c2b398b",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
+    }
+  }
+}

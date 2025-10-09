@@ -1,0 +1,112 @@
+.vendor-products-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: #fffaf6;
+  flex-wrap: wrap;
+}
+
+.vendor-filter-container {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.vendor-filter-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-clear-btn {
+  font-size: 12px;
+  background: none;
+  border: none;
+  color: #d33;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.filter-section {
+  margin-bottom: 15px;
+}
+
+.filter-section strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+.filter-checkbox {
+  margin-right: 6px;
+}
+
+.vendor-products-right-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.shop-underline {
+  width: 50px;
+  height: 3px;
+  background-color: #c0392b;
+  border-radius: 2px;
+  margin-bottom: 15px;
+}
+
+.flowercardContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.product-card-wrapper {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.product-card-wrapper:hover {
+  transform: translateY(-4px);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 1em;
+}
+
+.paginationButton {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-size: 14px;
+  color: #666;
+}

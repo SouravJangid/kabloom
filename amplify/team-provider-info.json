@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-zoodrinkindiaamplify-dev-121112-authRole",
+      "UnauthRoleArn": "arn:aws:iam::051320401461:role/amplify-zoodrinkindiaamplify-dev-121112-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::051320401461:role/amplify-zoodrinkindiaamplify-dev-121112-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-zoodrinkindiaamplify-dev-121112-deployment",
+      "UnauthRoleName": "amplify-zoodrinkindiaamplify-dev-121112-unauthRole",
+      "StackName": "amplify-zoodrinkindiaamplify-dev-121112",
+      "StackId": "arn:aws:cloudformation:ap-south-1:051320401461:stack/amplify-zoodrinkindiaamplify-dev-121112/dac9a6f0-ef42-11ea-b857-02c8ac154338",
+      "AmplifyAppId": "d2yaes6shcdr1t"
+    },
+    "categories": {
+      "auth": {
+        "zoodrinkindiaamplify9640d7a3": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+type KYC @model {
+  id: ID!
+  selected_id_type: String
+  id_front_image: String
+  id_back_image: String
+  selfie_image: String
+  id_number: String
+  name: String
+  date_of_birth: AWSDate
+  id_ext_image: String
+  gender: String
+}

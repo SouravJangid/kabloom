@@ -1,0 +1,14 @@
+.dropbtn {
+    border: none;
+    outline: none;
+    color: black;
+    background-color: inherit;
+    font: inherit;
+    margin: 0;
+}
+
+
+
+.spacer {
+    flex: 1
+}

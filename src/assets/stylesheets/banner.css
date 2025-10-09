@@ -1,0 +1,150 @@
+.banner-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  /* justify-content: center; */
+  padding: 20px;
+  background-color: #f5f5f5;
+  /* border-bottom: 1px solid #ccc; */
+  height: 33vh;
+  /* width: 95vw; */
+}
+
+
+.banner {
+  /* centers the inner row and limits its width */
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;               
+  justify-content: center;           
+
+  /* responsive spacing between logo and info */
+  gap: clamp(90px, 4vw, 48px);     
+
+  padding: 24px 16px;
+}
+
+.logo img {
+  display: block;
+  height: clamp(70px, 10vw, 120px); 
+  width: auto;
+  object-fit: contain;
+}
+
+
+.info h1 {
+  margin: 0;
+  font-size: 34px;
+}
+
+.info p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.website-link {
+  text-decoration: none;
+  color: black;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.rating img {
+  height: 20px;
+}
+
+.social img {
+  padding-top: 7px;
+  height: 20px;
+  margin-right: 10px;
+  background: none;
+}
+/* 
+.nav {
+  display: flex;
+  position: relative;
+  top: 55px;
+  gap: 100px;
+  font-size: larger;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.nav a:hover {
+  color: #007bff;
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
+  text-underline-offset: 10px;
+
+} */
+
+@media (max-width: 768px) {
+  .banner-container {
+    /* display: flex; */
+    /* justify-content: space-between; */
+    /* align-items: end; */
+    height: auto;
+    padding: 10px;
+    height: 40vh;
+
+  }
+
+  .banner {
+    flex-direction: column;
+    /* align-items: flex-start; */
+    gap: 10px;
+  }
+
+  .logo img {
+    height: 70px;
+    padding-right: 0;
+  }
+
+  .info h1 {
+    font-size: 22px;
+  }
+
+  .info p {
+    font-size: 13px;
+  }
+
+  .rating img,
+  .social img {
+    height: 18px;
+  }
+
+  /* .nav {
+    gap: 25px;
+    font-size: medium;
+    top: 30px;
+  }
+
+  .nav a {
+    text-align: left;
+  } */
+}
+
+
+@media (max-width: 400px) {
+  .banner-container {
+    height: 32vh;
+  }
+  /* .nav {
+    gap: 20px;
+    font-size: medium;
+    top: 18px;
+  } */
+
+}

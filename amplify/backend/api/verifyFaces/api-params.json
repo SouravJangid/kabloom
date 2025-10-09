@@ -1,0 +1,63 @@
+{
+    "paths": [
+        {
+            "name": "/verify",
+            "lambdaFunction": "zoodrinkindiaamplify1c2b398b",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/compare",
+            "lambdaFunction": "zoodrinkindiaamplify1c2b398b",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/verifyCustomer",
+            "lambdaFunction": "zoodrinkindiaamplify1c2b398b",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            }
+        }
+    ],
+    "resourceName": "verifyFaces",
+    "apiName": "verifyFaces",
+    "functionArns": [
+        {
+            "lambdaFunction": "zoodrinkindiaamplify1c2b398b"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 1,
+        "authRoleName": "amplify-zoodrinkindiaamplify-dev-121112-authRole",
+        "unAuthRoleName": "amplify-zoodrinkindiaamplify-dev-121112-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "zoodrinkindiaamplify1c2b398b",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "91c85b1c"
+}
