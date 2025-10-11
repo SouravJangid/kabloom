@@ -1,11 +1,11 @@
 /* Compact pagination styles */
 .pagination .page-item .page-link.compact,
 .pagination .page-item.compact .page-link {
-  padding: 4px 8px !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  line-height: 20px !important;
-  font-size: 13px !important;
+  padding: 4px 8px;
+  min-width: 28px;
+  height: 28px;
+  line-height: 20px;
+  font-size: 13px;
 }
 
 .pagination .page-item .page-link {
@@ -19,4 +19,36 @@
 
 .page-item.compact .page-link {
   border-radius: 4px;
+}
+
+.pagination .page-link {
+  color: #890a0a;
+}
+
+.pagination .page-link:hover {
+  color: #670707;
+  text-decoration: none;
+}
+
+.pagination .active .page-link {
+  background-color: #890a0a;
+  color: #ffffff;
+  border-color: #890a0a;
+}
+
+/* Page size select */
+.pageSize .ant-select-selector {
+  border-color: #890a0a !important;
+  box-shadow: none !important;
+}
+
+.pageSize .ant-select-focused .ant-select-selector,
+.pageSize .ant-select-selector:focus {
+  border-color: #890a0a !important;
+  box-shadow: none !important;
+}
+
+.pageSize .ant-select-selector:hover {
+  border-color: #890a0a !important;
+  box-shadow: 0 0 0 4px rgba(137, 10, 10, 0.1) !important;
 }
