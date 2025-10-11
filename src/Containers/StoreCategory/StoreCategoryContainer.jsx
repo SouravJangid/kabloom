@@ -1231,12 +1231,38 @@ class ProductsContainer extends React.Component {
                     this.state.productList &&
                     this.state.productList.length > 0 && (
                       <>
-                        <div className="pagination-container">
+                        <div
+                          className="pagination-container"
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent:
+                              typeof window !== "undefined" &&
+                              window.innerWidth >= 768
+                                ? "flex-end"
+                                : "center",
+                            paddingRight:
+                              typeof window !== "undefined" &&
+                              window.innerWidth >= 768
+                                ? 24
+                                : 0,
+                            alignItems: "center",
+                            gap: "10px",
+                            flexWrap: "nowrap",
+                          }}
+                        >
                           <Select
                             className="pageSize"
                             value={this.state.limit}
                             placeholder="Select Page Size"
-                            style={{ marginRight: "10px", minWidth: "100px" }}
+                            style={{
+                              marginRight: "10px",
+                              minWidth:
+                                typeof window !== "undefined" &&
+                                window.innerWidth < 520
+                                  ? 80
+                                  : 110,
+                            }}
                             onChange={this.handlePageSizeChange}
                           >
                             <Select.Option value="10">10</Select.Option>
@@ -1267,12 +1293,38 @@ class ProductsContainer extends React.Component {
                             {" "}
                             <LoaderOverLay />
                           </div>
-                          <div className="mt-2 pagination-container">
+                          <div
+                            className="mt-2 pagination-container"
+                            style={{
+                              width: "100%",
+                              display: "flex",
+                              justifyContent:
+                                typeof window !== "undefined" &&
+                                window.innerWidth >= 768
+                                  ? "flex-end"
+                                  : "center",
+                              paddingRight:
+                                typeof window !== "undefined" &&
+                                window.innerWidth >= 768
+                                  ? 24
+                                  : 0,
+                              alignItems: "center",
+                              gap: "10px",
+                              flexWrap: "nowrap",
+                            }}
+                          >
                             <Select
                               className="pageSize"
                               value={this.state.limit}
                               placeholder="Select Page Size"
-                              style={{ marginRight: "10px", minWidth: "100px" }}
+                              style={{
+                                marginRight: "10px",
+                                minWidth:
+                                  typeof window !== "undefined" &&
+                                  window.innerWidth < 520
+                                    ? 80
+                                    : 110,
+                              }}
                               onChange={this.handlePageSizeChange}
                             >
                               <Select.Option value="10">10</Select.Option>

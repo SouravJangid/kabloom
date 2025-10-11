@@ -5,7 +5,9 @@ import { connect } from "react-redux";
 import { map as _map, get as _get } from "lodash";
 import { Container } from "reactstrap";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { TextField } from "@material-ui/core";
+import { TextField, IconButton, InputAdornment } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
+import CloseIcon from "@material-ui/icons/Close";
 import { debounce } from "lodash";
 import { commonActionCreater } from "../../Redux/Actions/commonAction";
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
@@ -143,14 +145,39 @@ class SearchProductsContainer extends React.Component {
   handleSelectChange = (event, value) => {
     if (value) {
       this.props.history.push(`/store/${_get(value, "value")}`);
+      if (this.props.closeNavbar) this.props.closeNavbar();
     }
   };
 
   handleSearchResultsRedirect = (searchTerm) => {
     if (searchTerm && this.props.history) {
-      this.props.history.push(
-        `/search/results?q=${encodeURIComponent(searchTerm)}`
+      if (this.props.closeNavbar) this.props.closeNavbar();
+      // give the navbar a moment to close visually before routing
+      setTimeout(() => {
+        this.props.history.push(
+          `/search/results?q=${encodeURIComponent(searchTerm)}`
+        );
+      }, 80);
+    }
+  };
+
+  handleSearchIconClick = (e) => {
+    // prevent any default behaviour
+    if (e && e.preventDefault) e.preventDefault();
+    const value = (this.state.searchValue || "").trim();
+    if (value) this.handleSearchResultsRedirect(value);
+  };
+
+  handleClearClick = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    this.setState({ searchValue: "", options: [] });
+    // also clear redux search results if needed
+    try {
+      this.props.dispatch(
+        commonActionCreater({}, "SEARCH_PRODUCTS_LIST_SUCCESS")
       );
+    } catch (err) {
+      // ignore if dispatch not available
     }
   };
 
@@ -202,11 +229,43 @@ class SearchProductsContainer extends React.Component {
                 variant="outlined"
                 placeholder="Search..."
                 style={{ width: "100%", maxWidth: "100%" }}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {this.state.searchValue ? (
+                        <IconButton
+                          aria-label="clear"
+                          onClick={this.handleClearClick}
+                          edge="end"
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      ) : null}
+                      <IconButton
+                        aria-label="search"
+                        onClick={(e) => {
+                          this.handleSearchIconClick(e);
+                          if (this.state.isShowtoggle)
+                            this.setState({ isShowtoggle: false });
+                        }}
+                        edge="end"
+                      >
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     const value = this.state.searchValue;
-                    this.handleSearchResultsRedirect(value);
+                    // ensure navbar closes then navigate
+                    if (this.props.closeNavbar) this.props.closeNavbar();
+                    setTimeout(
+                      () => this.handleSearchResultsRedirect(value),
+                      80
+                    );
                     // this.setState({ searchValue: "", options: [] });
                     e.stopPropagation();
                   }

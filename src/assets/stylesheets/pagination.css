@@ -1,0 +1,22 @@
+/* Compact pagination styles */
+.pagination .page-item .page-link.compact,
+.pagination .page-item.compact .page-link {
+  padding: 4px 8px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  line-height: 20px !important;
+  font-size: 13px !important;
+}
+
+.pagination .page-item .page-link {
+  padding: 6px 12px;
+}
+
+.pagination {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.page-item.compact .page-link {
+  border-radius: 4px;
+}

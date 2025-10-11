@@ -226,8 +226,6 @@ class HeaderBar extends React.Component {
     updateParentFilter(data);
     setProductList(data);
     // console.log('checking1');
-    // console.log('checking2');
-
     this.handleToggle();
   };
 
@@ -439,7 +437,7 @@ class HeaderBar extends React.Component {
                     onChange={() => this.queryChangeHandler(this.value)}
                   ></input> */}
                   <div className="d-none d-lg-block my-2 px-3">
-                    <SearchProductsContainer />
+                    <SearchProductsContainer closeNavbar={() => { if (this.state.isShowtoggle) this.setState({ isShowtoggle: false }); }} />
                   </div>
                 </Col>
                 <div className="position-relative ml-3 ml-md-4 ml-lg-5">
@@ -532,7 +530,7 @@ class HeaderBar extends React.Component {
                         }`}
                       style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
                     >
-                      <SearchProductsContainer style={{ width: "100%" }} />
+                      <SearchProductsContainer style={{ width: "100%" }} closeNavbar={() => { if (this.state.isShowtoggle) this.setState({ isShowtoggle: false }); }} />
                     </div>
 
                     <div

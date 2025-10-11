@@ -88,44 +88,12 @@ class StoreContainer extends React.Component {
     });
 
     const { classes } = this.props;
-    const topProducts = Object.keys(
-      omit(_get(this.state, "storeData", []), ["ads", "banner", "topproduct"])
-    );
-    return this.state.noProduct ? (
-      <div className="page-content-container" style={{ textAlign: "center" }}>
-        {_get(this.state.storeData, "message", "No product available")}
-      </div>
-    ) : (
-      <React.Fragment>
-        {_get(this.state, "storeData.banner", [])?.length > 0 && (
-          <RecentActivityComponent
-            {...this.props}
-            banners={this.state.storeData.banner}
-          />
-        )}
-        <div className="page-content-container">
-          <div className="mainStoreContainer">
-            {_get(this.state, "storeData.topproduct", [])?.length > 0 && (
-              <div className="mt-lg-5 mt-0">
-                <h2>TOP PRODUCT IN YOUR AREA</h2>
-                <hr style={{ backgroundColor: "white" }}></hr>
-                <TopProductComponent
-                  {...this.props}
-                  topproduct={_filter(res, (o) => !Array.isArray(o))}
-                />
-              </div>
-            )}
-            {_get(this.state, "storeData.ads", [])?.length > 0 && (
-              <div className="mt-5">
-                <PromotionalComponent
-                  {...this.props}
-                  ads={this.state.storeData.ads}
-                />
-              </div>
-            )}
-            {topProducts.map((x) => {
-              const categoryName = this.state?.storeData[x].categoryName;
-              const products = this.state?.storeData[x].products;
+    const topProducts = _get(this.state, "storeData.categories", [])
+    console.log("*****************topProducts",topProducts);
+    
+    const categoriesRenderComp = (x) => {
+              const categoryName = x.categoryName;
+              const products = x.products;
               const productSorted = products?.map((x) => {
                 return {
                   ...x,
@@ -149,7 +117,31 @@ class StoreContainer extends React.Component {
                   />
                 </div>
               );
-            })}
+            };
+    return this.state.noProduct ? (
+      <div className="page-content-container" style={{ textAlign: "center" }}>
+        {_get(this.state.storeData, "message", "No product available")}
+      </div>
+    ) : (
+      <React.Fragment>
+        {_get(this.state, "storeData.banner", [])?.length > 0 && (
+          <RecentActivityComponent
+            {...this.props}
+            banners={this.state.storeData.banner}
+          />
+        )}
+        <div className="page-content-container">
+          <div className="mainStoreContainer">
+            {topProducts.length>0 && categoriesRenderComp(topProducts[0])}
+            {_get(this.state, "storeData.ads", [])?.length > 0 && (
+              <div className="mt-5">
+                <PromotionalComponent
+                  {...this.props}
+                  ads={this.state.storeData.ads}
+                />
+              </div>
+            )}
+            {topProducts.length>1 && topProducts.slice(1).map(categoriesRenderComp)}
           </div>
         </div>
       </React.Fragment>

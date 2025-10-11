@@ -10,6 +10,7 @@ import { LoaderOverLay } from "../../Global/UIComponents/LoaderHoc";
 import StoreCategoryPagination from "../../Components/StoreCategoryComponents/StorgeCategoryPagination";
 import { isEmpty as _isEmpty, get as _get } from "lodash";
 import genericGetData from "../../Redux/Actions/genericGetData";
+import "../../assets/stylesheets/pagination.css";
 
 const styles = () => ({});
 
@@ -143,12 +144,38 @@ class SearchResultsContainer extends React.Component {
                   {isLoading && <LoaderOverLay />}
 
                   {!_isEmpty(productList) && (
-                    <div className="pagination-container">
+                    <div
+                      className="pagination-container"
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent:
+                          typeof window !== "undefined" &&
+                          window.innerWidth >= 768
+                            ? "flex-end"
+                            : "center",
+                        paddingRight:
+                          typeof window !== "undefined" &&
+                          window.innerWidth >= 768
+                            ? 24
+                            : 0,
+                        alignItems: "center",
+                        gap: "10px",
+                        flexWrap: "nowrap",
+                        margin: "14px 0",
+                      }}
+                    >
                       <Select
                         className="pageSize"
                         value={String(limit)}
                         placeholder="Select Page Size"
-                        style={{ marginRight: "10px", minWidth: "100px" }}
+                        style={{
+                          minWidth:
+                            typeof window !== "undefined" &&
+                            window.innerWidth < 520
+                              ? 80
+                              : 110,
+                        }}
                         onChange={this.handlePageSizeChange}
                       >
                         <Select.Option value="10">10</Select.Option>
@@ -171,12 +198,38 @@ class SearchResultsContainer extends React.Component {
                   />
 
                   {!_isEmpty(productList) && (
-                    <div className="mt-2 pagination-container">
+                    <div
+                      className="mt-2 pagination-container"
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent:
+                          typeof window !== "undefined" &&
+                          window.innerWidth >= 768
+                            ? "flex-end"
+                            : "center",
+                        paddingRight:
+                          typeof window !== "undefined" &&
+                          window.innerWidth >= 768
+                            ? 24
+                            : 0,
+                        alignItems: "center",
+                        gap: "10px",
+                        flexWrap: "nowrap",
+                        margin: "14px 0",
+                      }}
+                    >
                       <Select
                         className="pageSize"
                         value={String(limit)}
                         placeholder="Select Page Size"
-                        style={{ marginRight: "10px", minWidth: "100px" }}
+                        style={{
+                          minWidth:
+                            typeof window !== "undefined" &&
+                            window.innerWidth < 520
+                              ? 80
+                              : 110,
+                        }}
                         onChange={this.handlePageSizeChange}
                       >
                         <Select.Option value="10">10</Select.Option>
