@@ -770,7 +770,7 @@ class Speed extends React.Component {
           <Row className="no-gutters justify-content-lg-between secMinHeight">
             <Col lg={5} className="order-1 d-none d-lg-block order-md-2">
               <div className="productImgSection">
-                <img src={proImg} className="imgProduct img-responsive"></img>
+                <img src={proImg} alt='productImage' className="imgProduct img-responsive"></img>
               </div>
             </Col>
             <Col lg={6} className="order-2 d-flex flex-column order-md-1">

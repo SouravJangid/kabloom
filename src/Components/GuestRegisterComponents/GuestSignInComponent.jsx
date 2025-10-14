@@ -116,11 +116,11 @@ class GuestSignInComponent extends React.Component {
                                     </Button>
                                     </Col>
                                     <Col xs={12} sm={'auto'} className="d-flex justify-content-center" >                                     
-                                        <a href="javascript:void(0)" onClick={this.props.handleForgetPasswordReq} className="forgotPassword">Forgot Password?</a>
+                                        <a href="javascript: void(0)" onClick={this.props.handleForgetPasswordReq} className="forgotPassword">Forgot Password?</a>
                                     </Col>
                                 </div>                               
                                 <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center'}}>
-                                    <p><span>NEW CUSTOMER? </span><a href="javascript:void(0)" onClick={this.props.handleSignUpReq} className="forgotPassword underlineTxt" >Start here</a></p>
+                                    <p><span>NEW CUSTOMER? </span><a href="javascript: void(0)"  onClick={this.props.handleSignUpReq} className="forgotPassword underlineTxt" >Start here</a></p>
                                 </div>
                             </form>)}
                             />
@@ -142,3 +142,4 @@ function mapStateToProps(state) {
     };
 }
 export default connect(mapStateToProps)(GuestSignInComponent);
+

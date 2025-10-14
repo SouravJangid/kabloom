@@ -501,7 +501,7 @@ class CartContainer extends React.Component {
                                     </LoaderButton> }
                                 </div>
                                 <div className="productImgSection ImgSectionwt">
-                                    <img src={waterMark} className="imgProduct"></img>
+                                    <img src={waterMark} alt="ProductImage" className="imgProduct"></img>
                                 </div>
                             </div>
                         </Col>

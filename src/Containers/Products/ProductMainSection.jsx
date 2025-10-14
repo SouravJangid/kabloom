@@ -75,7 +75,8 @@ redirectToCansPage = () => {
                 <CssBaseline />
                 <div style={{height: "350px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                     <div class="block-title p-5">SHOP</div>
-                    <div onClick={this.redirectToCansPage} className="d-flex justify-content-center mt-4 mb-4"><img src={proImg} alt="Smiley face" height="250" width="100"></img></div>
+                    <div onClick={this.redirectToCansPage} className="d-flex justify-content-center mt-4 mb-4">
+                        <img src={proImg} alt="Smileyface" height="250" width="100"></img></div>
                     
                     </div>
                 {this.props.categoriesList && this.props.categoriesList.length > 0 && 

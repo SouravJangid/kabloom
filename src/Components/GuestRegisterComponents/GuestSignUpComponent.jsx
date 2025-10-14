@@ -287,7 +287,7 @@ class GuestSignUpComponent extends React.Component {
                                         </Col>
                                     </Row>
                                     <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}>
-                                        <p><span>ALREADY HAVE AN ACCOUNT? </span><a href="javascript:void(0)" onClick={this.props.handleSignInReq} className="forgotPassword underlineTxt" >Sign in</a></p>
+                                        <p><span>ALREADY HAVE AN ACCOUNT? </span><a href="javascript: void(0)" onClick={this.props.handleSignInReq} className="forgotPassword underlineTxt" >Sign in</a></p>
                                     </div>
                                 </form>)}
                         />
@@ -300,7 +300,6 @@ class GuestSignUpComponent extends React.Component {
         );
     }
 }
-
 
 
 function mapStateToProps(state) {

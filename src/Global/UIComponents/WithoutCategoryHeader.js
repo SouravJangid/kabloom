@@ -133,7 +133,7 @@ class WithoutCategoryHeaderBar extends React.Component {
                                 />}
                             </Col>
                             <Col xs={7} md={2} className="d-flex justify-content-md-center justify-content-start align-items-center" >
-                                <img src={Logo} onClick={this.handleHomeIconClick} className="img-responsive logo" style={{ cursor: 'pointer' }}></img>
+                                <img src={Logo}  alt='KabloomLogo' onClick={this.handleHomeIconClick} className="img-responsive logo" style={{ cursor: 'pointer' }}></img>
                             </Col>
                             <Col xs={5} className="d-flex justify-content-end headerLeftNav">
 

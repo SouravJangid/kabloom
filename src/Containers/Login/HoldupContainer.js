@@ -198,7 +198,7 @@ class HoldupContainer extends React.Component {
                 <Container className="container-custom holdUpscreen d-flex flex-column align-items-center justify-content-start justify-content-md-center">
                     <Row className="align-items-center justify-content-center">
                     <Col sm={4} className="d-flex justify-content-center align-items-center mt-2" >
-                                <img src={Logo} className="img-responsive logo"></img>
+                                <img src={Logo} alt='KabloomLogo' className="img-responsive logo"></img>
                     </Col>
                     </Row>
                     <Row className="align-items-center mt-3">
@@ -321,7 +321,7 @@ class HoldupContainer extends React.Component {
             <Container className="container-custom holdUpscreen d-flex flex-column align-items-center justify-content-start justify-content-md-center">
                 <Row className="align-items-center justify-content-center">
                 <Col sm={4} className="d-flex justify-content-center align-items-center mt-2" >
-                            <img src={Logo} className="img-responsive logo"></img>
+                            <img src={Logo} alt='Kabloom Logo' className="img-responsive logo"></img>
                 </Col>
                 </Row>
                 <Row className="align-items-center mt-3">

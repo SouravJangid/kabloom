@@ -39,7 +39,7 @@ class MegaMenu extends Component {
      
     return (
         <li onClick={(e) => { this.props.handleCategoryClick({ data: m, allData: this.props.category, categoryName, event: e })}} key={m.category_id.toString()}>
-                <a href="javascript: void(0)">{m.category_name}</a>
+                <a href="javascript: void(0)"> {m.category_name}</a>
         </li>
     )
   });
@@ -67,7 +67,7 @@ class MegaMenu extends Component {
         return (
             <React.Fragment key={this.props.category.category_id.toString()}>
                 <li className={`${this.props.states[`isshowHoverToggle${this.props.category.category_name}`]? 'show': ''}`} onMouseEnter={() => { !isMobile && this.props.onMouseEnter({category: this.props.category.category_name, child: this.props.category.child}) }} onMouseLeave={() => this.props.onMouseLeave({ category: this.props.category.category_name})} onClick={(e) => { this.props.dropdownToggle({ category: this.props.category.category_name, event: e })}}>
-                    {this.props.category.category_name ? <a className={ _isEmpty(this.props.category.child)? 'no-after' : ''} href="javascript: void(0)" onClick={(e) => this.clickFirstCategory({categoryName: this.props.category.category_name, event: e, child: this.props.category.child})}>{this.props.category.category_name.toUpperCase()}</a>: null}
+                    {this.props.category.category_name ? <a  className={ _isEmpty(this.props.category.child)? 'no-after' : ''} href="javascript: void(0)" onClick={(e) => this.clickFirstCategory({categoryName: this.props.category.category_name, event: e, child: this.props.category.child})}>{this.props.category.category_name.toUpperCase()}</a>: null}
                     
                     {/* <a href="#">WINE</a>                                           */}
                     <div className="dropdownMenu" style={{display: `${this.props.states[`isshowHoverToggle${this.props.category.category_name}`]? '': 'none'}`}}>
@@ -131,4 +131,6 @@ class MegaMenu extends Component {
     }
 }
 
+
 export default MegaMenu;
+

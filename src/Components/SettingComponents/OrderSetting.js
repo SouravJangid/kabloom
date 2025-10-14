@@ -952,11 +952,12 @@ class OrderSetting extends React.Component {
         <React.Fragment key={index}>
           <Row className="detailwrapper m-border-bottom">
             <Col xs={3} className="justify-content-center align-items-center d-md-none">
-              <img src={proimg} className="img-responsive"></img>
+              <img src={proimg} alt='OrderImage' className="img-responsive"></img>
             </Col>
             <Col className="d-md-flex justify-content-md-center align-items-md-center p-0">
               <Col xs={12} md={4} xl={4} className=" d-flex align-items-md-center">
-                <div className="d-none d-md-block col-3 p-0"><img src={proimg} className="img-responsive"></img></div>
+                <div className="d-none d-md-block col-3 p-0">
+                  <img src={proimg}  alt='OrderImage'className="img-responsive"></img></div>
                 <div className="mb-3 mb-md-0 pl-md-3">{_get(val, 'itemName')}</div>
               </Col>
               <Col xs={12} md={2} xl={2}><strong className="d-md-none">Retailer:</strong> {_get(val, 'orderNo')}</Col>

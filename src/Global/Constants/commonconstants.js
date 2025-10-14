@@ -11,3 +11,10 @@ export const priceRanges = [
 ];
 
 export const sizes = ["Bulk Flowers", "No Vase", "With Vase"];
+
+export const sortingMap = {
+  'NAME_SORT_BY_ASC': 'Name : A to Z',
+  'NAME_SORT_BY_DESC': 'Name : Z to A',
+  'PRICE_SORT_BY_DESC': 'Price : High to Low',
+  'PRICE_SORT_BY_ASC': 'Price : Low to High',
+};

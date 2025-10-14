@@ -254,7 +254,7 @@ class SignIn extends React.Component {
 
                         <div>
                             <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
-                                <a href="javascript:void(0)" onClick={this.forgotPasswordHandler} className="forgotPassword">Forgot Password?</a>
+                                <a href="javascript: void(0)" onClick={this.forgotPasswordHandler} className="forgotPassword">Forgot Password?</a>
                             </div>
                             <Row>
                                 <Col className="text-center" >
@@ -269,6 +269,7 @@ class SignIn extends React.Component {
         );
     }
 }
+
 
 SignIn.propTypes = {
     classes: PropTypes.object.isRequired,

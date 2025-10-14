@@ -12,8 +12,6 @@ import { isEmpty as _isEmpty, get as _get } from "lodash";
 import genericGetData from "../../Redux/Actions/genericGetData";
 import "../../assets/stylesheets/pagination.css";
 
-const styles = () => ({});
-
 class SearchResultsContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -260,4 +258,4 @@ SearchResultsContainer.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-export default connect()(withStyles(styles)(SearchResultsContainer));
+export default connect()(SearchResultsContainer);

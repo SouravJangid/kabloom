@@ -353,7 +353,7 @@ class CheckOut extends React.Component {
                             </Col>
                             <Col lg={5} className="d-none d-lg-block">
                                 <div className="productImgSection">
-                                    <img src={watermark} className="imgProduct img-responsive"></img>
+                                    <img src={watermark} alt="watermark" className="imgProduct img-responsive"></img>
                                 </div>
                             </Col>
                         </Row>
@@ -441,7 +441,7 @@ class CheckOut extends React.Component {
                                 </div>
                             </div>
                             <div className="productImgSection proDetailSec" style={{ margin: '3rem auto 3rem auto'}}>
-                                <img src={watermark} className="imgProduct img-responsive"></img>
+                                <img src={watermark} alt="watermark" className="imgProduct img-responsive"></img>
                             </div>
                             
                         </Col>
