@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import "./pagination.css";
+import "../../assets/stylesheets/pagination.css";
 
 function PaginatedItems({
   itemsPerPage,

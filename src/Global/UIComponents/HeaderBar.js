@@ -358,7 +358,7 @@ class HeaderBar extends React.Component {
       <React.Fragment>
         <Container fluid={true} className="topHeader d-flex align-items-center">
           <Container className="container-content-header">
-            <Row className="justify-content-end justify-content-lg-between border-bottom align-items-center py-2 px-3 flex-grow-1 h-100">
+            <Row className="justify-content-end justify-content-lg-between align-items-center py-2 px-3 flex-grow-1 h-100">
               <div>{this.state.isLoading && <LoaderOverLay />}</div>
               <Col xs={5} className="d-none d-lg-block pl-0">
                 {/* <Button className="addCircleIcon icons mr-4">+</Button> */}
@@ -526,14 +526,6 @@ class HeaderBar extends React.Component {
                   </div>
                   <div className="navbarCollapse">
                     <div
-                      className={`d-none d-md-block d-lg-none my-2 px-3 ${this.state.isShowtoggle ? "d-block" : "d-none"
-                        }`}
-                      style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
-                    >
-                      <SearchProductsContainer style={{ width: "100%" }} closeNavbar={() => { if (this.state.isShowtoggle) this.setState({ isShowtoggle: false }); }} />
-                    </div>
-
-                    <div
                       className="d-block d-lg-none headerShippingAddress"
                       onMouseEnter={this.handleChangeBoxToggle}
                       onMouseLeave={this.handleChangeBoxToggle}
@@ -562,6 +554,14 @@ class HeaderBar extends React.Component {
                   </div>
                 </div>
               </Col>
+            </Row>
+            <Row>
+              <div
+                className={`d-none d-md-block d-lg-none my-2 px-3 d-block`}
+                style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
+              >
+                <SearchProductsContainer style={{ width: "100%" }} />
+              </div>
             </Row>
             {this.state.showDialogueBox && (
               <ChangeAddressDialogue

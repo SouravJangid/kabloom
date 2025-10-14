@@ -41,15 +41,20 @@ const styles = (theme) => ({
       },
     },
     "& .MuiInputBase-input": {
-      padding: "0 10px",
+      padding: "10px 10px",
       backgroundColor: "#ebebeb00",
       caretColor: "transparent",
+      height: "auto" /* Override inline style */,
       "&:focus": {
         caretColor: "black",
       },
     },
   },
-
+  icon: {
+    fontSize: "2.6rem",
+    color: "#890a0a",
+    marginRight: "-1em",
+  },
   optionItem: {
     display: "flex",
     alignItems: "center",
@@ -251,7 +256,7 @@ class SearchProductsContainer extends React.Component {
                         }}
                         edge="end"
                       >
-                        <SearchIcon />
+                        <SearchIcon className={classes.icon} />
                       </IconButton>
                     </InputAdornment>
                   ),
