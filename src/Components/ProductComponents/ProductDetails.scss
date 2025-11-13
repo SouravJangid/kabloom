@@ -52,8 +52,8 @@
        .image-gallery-thumbnail {
          border: 1px solid rgb(94, 94, 94);
          padding: 0 1em;
-         height: 4.5em;
-         width: 5em;
+         height: 3.5em;
+         width: 4em;
          border-radius: 10px;
          margin-bottom: 0.2em;
 
@@ -304,6 +304,10 @@
      display: flex;
      flex-direction: column;
      align-items: flex-start;
+
+     .h3 {
+       font-size: 1em;
+     }
    }
 
    .size-label {
@@ -461,6 +465,11 @@
    justify-content: center;
    align-items: center;
    height: 3em;
+
+   .circleprogress {
+     size: 12;
+     color: white;
+   }
  }
 
  .buy-now-btn:hover {
@@ -717,5 +726,20 @@
 
    .pdp-info .option-img {
      width: auto;
+   }
+
+ }
+
+ @media (min-width: 992px) {
+   .sticky-left {
+     position: sticky;
+     top: 1rem;
+     align-self: flex-start;
+   }
+
+   .sticky-right {
+     position: sticky;
+     top: 1rem;
+     align-self: flex-start;
    }
  }
