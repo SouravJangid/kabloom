@@ -159,7 +159,7 @@ const ProductDetails = ({
 
         genericGetData({
             dispatch,
-            url: `/connect/index/product?prodid=37529&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zipcode}&courier_type=${couriertype}`,
+            url: `/connect/index/product?prodid=${productId}&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zipcode}&courier_type=${couriertype}`,
             constants: {
                 init: "PRODUCT_DETAILS_LIST_INIT",
                 success: "PRODUCT_DETAILS_LIST_SUCCESS",
@@ -360,7 +360,7 @@ const ProductDetails = ({
         const dineinTime = localStorage.getItem('dineinTime');
         const couriertype = localStorage.getItem('couriertype') || '';
 
-        fetch(`${APPLICATION_BFF_URL}/connect/index/product?prodid=37529&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zip}&courier_type=${couriertype}`)
+        fetch(`${APPLICATION_BFF_URL}/connect/index/product?prodid=${productID}&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zip}&courier_type=${couriertype}`)
             .then(r => r.json())
             .then(data => {
                 setState(prev => ({ ...prev, zipcodeLoading: false }));
