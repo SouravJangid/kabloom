@@ -52,3 +52,21 @@
   border-color: #890a0a !important;
   box-shadow: 0 0 0 4px rgba(137, 10, 10, 0.1) !important;
 }
+@media (max-width: 768px) {
+  .page-content-container h2 {
+    font-size: 1em;
+  }
+
+  .page-content-container .ant-select {
+    font-size: 13px !important;
+  }
+
+  .d-flex.justify-content-between.align-items-center {
+    flex-wrap: nowrap !important;
+  }
+
+  .filterButton {
+    display: inline-flex;
+    align-items: center;
+  }
+}

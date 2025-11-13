@@ -1,0 +1,97 @@
+{
+    "rating": 3.8,
+    "totalRatings": 1266,
+    "boughtCount": "50+",
+    "features": [
+        {
+            "image": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/73ada151-0218-48e8-8a56-be40f5745bf4._CR0,0,220,220_PT0_SX220__.jpg",
+            "heading": "Consciously Cut",
+            "paragraph": "We are committed to the well-being of our planet, which is why we strive to source flowers from farms who feel the same. Over the years, we have established relationships with farms that are dedicated to recognizing sustainable practices."
+        },
+        {
+            "image": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/2744ed43-9827-4ed1-8642-33a051444910._CR0,0,220,220_PT0_SX220__.jpg",
+            "heading": "Natural Joy",
+            "paragraph": "Our floral designers have spent years perfecting gorgeous arrangements with our beautiful fresh cut flowers. Bring a little joy into someone’s life, and send them a bouquet that will make their day!"
+        },
+        {
+            "image": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/78101881-b0aa-4c78-9c7f-06c33df5129b._CR0,0,220,220_PT0_SX220__.jpg",
+            "heading": "More Than Just Flowers",
+            "paragraph": "Flowers, of all varieties, have been gifted throughout history because of their deep meaning. So tap into your inner creative side and make a statement like never before."
+        },
+        {
+            "image": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/74d6aadc-0f07-4dfa-9d67-55e4e107d94c._CR0,0,220,220_PT0_SX220__.jpg",
+            "heading": "For All Occasions",
+            "paragraph": "If we can promise one thing, it is the smile on the face of whoever opens our iconic purple KaBloom box. For all occasions, know that we have spent decades arranging stems for all of life’s events."
+        }
+    ],
+    "steps": [
+        "Add Your Item To Your Cart",
+        "Select \"This Is A Gift\"",
+        "Add Your Personalized Gift Message In The Text Box."
+    ],
+    "productCard": [
+        {
+            "title": "Product Description",
+            "dimensions": "6 x 6 x 6 inches; 5 Pounds",
+            "manufacturer": "Kabloom",
+            "units": 1,
+            "rating": 3.8,
+            "reviewCount": 1266,
+            "price": "47.77",
+            "videoThumbnail": "https://i.pinimg.com/736x/2d/d0/44/2dd0443d4aa3a528dc65bc572307b8e6.jpg",
+            "productImage": "https://i.pinimg.com/736x/2d/d0/44/2dd0443d4aa3a528dc65bc572307b8e6.jpg"
+        }
+    ],
+    "proddata": [
+        {
+            "overallRating": 3.7,
+            "totalRatings": 1266,
+            "ratingBreakdown": {
+                "5": 59,
+                "4": 7,
+                "3": 7,
+                "2": 7,
+                "1": 20
+            },
+            "summary": {
+                "positive": [
+                    "Beauty",
+                    "Value for money",
+                    "Gift value"
+                ],
+                "negative": [
+                    "Wilt resistance",
+                    "Stem damage"
+                ],
+                "neutral": [
+                    "Quality",
+                    "Color variation",
+                    "Freshness"
+                ]
+            },
+            "topReviews": [
+                {
+                    "author": "Mike",
+                    "rating": 5,
+                    "date": "October 20, 2025",
+                    "color": "Yellow",
+                    "size": "12",
+                    "style": "Without Vase",
+                    "verified": true,
+                    "text": "I was stunned how fresh and beautiful my Roses arrived in the Box. Perfect packaging Days later the open up to the most beautiful big Roses",
+                    "images": [
+                        "https://via.placeholder.com/150/FF6B6B/FFFFFF?text=Rose1",
+                        "https://via.placeholder.com/150/FFD93D/FFFFFF?text=Rose2"
+                    ]
+                }
+            ],
+            "carouselImages": [
+                "https://via.placeholder.com/300x200/FFB6C1/FFFFFF?text=White+Roses",
+                "https://via.placeholder.com/300x200/DC143C/FFFFFF?text=Red+Roses",
+                "https://via.placeholder.com/300x200/FFFFFF/000000?text=White+Yellow",
+                "https://via.placeholder.com/300x200/FFA500/FFFFFF?text=Orange+Pink",
+                "https://via.placeholder.com/300x200/8B0000/FFFFFF?text=Dark+Red"
+            ]
+        }
+    ]
+}

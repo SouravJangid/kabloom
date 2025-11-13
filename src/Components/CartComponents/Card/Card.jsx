@@ -6,7 +6,6 @@ import CardChild from './CardChild'
 import { Form as ReactStrapFrom, FormGroup, Button, Container, Row, Col, Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, } from 'reactstrap';
 import proImg from '../../../assets/images/party-can.png';
 import watermark from '../../../assets/images/watermark.jpg';
-import CartImage from '../../../assets/images/Cart_Image.png';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import Scrollbar from "react-scrollbars-custom";
 import {
@@ -172,7 +171,7 @@ class CardComponent extends React.Component {
                     <Row className="no-gutters justify-content-lg-between secMinHeight">
                         <Col lg={5} className="order-1 d-none d-lg-block order-md-2">
                             <div className="productImgSection">
-                                <img src={CartImage} alt='watermark' className="imgProduct img-responsive"></img>
+                                <img src={watermark} alt='watermark' className="imgProduct img-responsive"></img>
                             </div>
                         </Col>
                         <Col lg={6} className="p-xl-5 p-md-4 py-4 flex-column d-flex">

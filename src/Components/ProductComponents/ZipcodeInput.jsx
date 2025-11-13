@@ -1,73 +1,80 @@
-import React,{ useState,useEffect } from 'react';
-import PropTypes from 'prop-types';
-import Input from '../UI/Input';
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+  TextField,
+  Button,
+  Typography,
+  CircularProgress,
+} from '@material-ui/core';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 import './ZipcodeInput.css';
 
-const ZipcodeInput = ({ zipcode, onChange, onCheck, loading, verified = false, placeholder = 'Enter Zipcode', zipcodeLength = 5, message: propMessage = '' }) => {
-    const [currZipCode, setCurrZipcode] = useState(zipcode || '');
-    const [message, setMessage] = useState(propMessage);
-    const [isPropMessageActive, setIsPropMessageActive] = useState(!!propMessage);
+const ZIPCODE_LENGTH = 5;
 
-    // Show propMessage whenever it changes, unless user edits input
-    useEffect(() => {
-        if (propMessage) {
-            setMessage(propMessage);
-            setIsPropMessageActive(true);
-        }
-    }, [propMessage]);
+const ZipcodeInput = ({
+  zipcode: propZipcode = '',
+  onCheck,
+  onZipChange,
+  loading = false,
+  verified = false,
+  message: propMessage = '',
+}) => {
+  const [zipcode, setZipcode] = useState(propZipcode);
+  const [error, setError] = useState('');
 
-    // Update message on loading or input change, but only if not showing propMessage
-    useEffect(() => {
-        if (!isPropMessageActive) {
-            if (loading) {
-                setMessage('Verifying...');
-            } else if (currZipCode.length < zipcodeLength) {
-                setMessage(`Enter ${zipcodeLength}-digit zipcode to enable fields`);
-            } else {
-                setMessage('');
-            }
-        }
-    }, [loading, currZipCode, zipcodeLength, isPropMessageActive]);
+  useEffect(() => setZipcode(propZipcode), [propZipcode]);
+  const handleChange = (e) => {
+    const val = e.target.value.replace(/\D/g, '').slice(0, 5);
+    setZipcode(val);
+    setError('');
 
-    const handleZipChange = (e) => {
-        const digitsOnly = (e.target.value || '').replace(/\D/g, '').slice(0, zipcodeLength);
-        setCurrZipcode(digitsOnly);
-        // On user edit, revert to input-driven message
-        setIsPropMessageActive(false);
-    };
+    // RESET VERIFICATION IF USER TYPES
+    if (onZipChange && val !== propZipcode) {
+      onZipChange();
+    }
+  };
+  const handleSubmit = useCallback(() => {
+    if (zipcode.length !== ZIPCODE_LENGTH) {
+      setError(`Enter ${ZIPCODE_LENGTH} digits`);
+      return;
+    }
+    setError('');
+    if (onZipChange) onZipChange();
+    onCheck(zipcode);
+  }, [zipcode, onCheck, onZipChange]);
 
-    return (
-        <div className="zipcode-input-wrapper">
-            <div style={{ display: 'flex', flexDirection: 'row', gap: 15 }}>
-                <Input
-                    value={currZipCode}
-                    onChange={handleZipChange}
-                    placeholder={placeholder}
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    maxLength={zipcodeLength}
-                    ariaLabel="Enter zipcode"
-                    className={`zipcode-input ${verified ? 'verified' : ''}`}
-                />
-                <button className="btnA" onClick={() => onCheck(currZipCode)} disabled={currZipCode.length < zipcodeLength || loading}>
-                    Submit
-                </button>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div className="zipcode-helper">{message}</div>
-                {/* {verified && <div className="zipcode-verified" aria-live="polite"><span className="verified-icon" aria-hidden="true">✓</span><span className="visually-hidden">Verified</span></div>} */}
-            </div>
-        </div>
-    );
-};
+  return (
+    <div className="zipcode-input-wrapper">
+      <div className="zipcode-input-row">
+        <TextField
+          variant="outlined"
+          value={zipcode}
+          onChange={handleChange}
+          placeholder=""
+          className="zipcode-input"
+          inputProps={{ maxLength: 5 }}
+          disabled={loading}
+        />
+        <Button
+          variant="contained"
+          className="zipcode-submit-btn"
+          onClick={handleSubmit}
+          disabled={loading || zipcode.length !== ZIPCODE_LENGTH}
+        >
+          {loading ? <CircularProgress size={14} color="inherit" /> : 'Submit'}
+        </Button>
+      </div>
 
-ZipcodeInput.propTypes = {
-    zipcode: PropTypes.string,
-    onChange: PropTypes.func,
-    onCheck: PropTypes.func,
-    loading: PropTypes.bool,
-    placeholder: PropTypes.string,
-    message: PropTypes.string
+           {error && <div className="zipcode-error">{error}</div>}
+      {propMessage && !verified && <div className="zipcode-error">{propMessage}</div>}
+
+     {(verified || (localStorage.getItem('zipcode') === zipcode && zipcode.length === ZIPCODE_LENGTH)) && (
+      <Typography variant="body2" className="zipcode-success">
+        <LocationOnIcon className="zipcode-location-icon" />
+        Deliver to Boston {zipcode}
+      </Typography>
+    )}
+    </div>
+  );
 };
 
 export default ZipcodeInput;

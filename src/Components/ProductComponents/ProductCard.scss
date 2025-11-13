@@ -1,0 +1,172 @@
+.product-container {
+    .product-header {
+        margin-bottom: 16px;
+
+        .product-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0 0 8px 0;
+        }
+
+        .product-details {
+            font-size: x-small;
+            margin: 4px 0;
+
+            p {
+                font-weight: 600;
+
+                span {
+                    font-size: xx-small;
+                    font-weight: 100;
+                }
+            }
+        }
+
+        .customer-review {
+            font-size: x-small;
+            font-weight: 600;
+        }
+
+        .customer-reviews {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 0.7em;
+
+            p {
+                margin: 0;
+            }
+
+            .stars {
+                color: #f5a623;
+            }
+
+            .review-count {
+                text-decoration: none;
+                cursor: pointer;
+                color: black;
+            }
+        }
+    }
+
+    .video-section {
+        h3 {
+            font-weight: bold;
+
+        }
+
+        .video-thumbnail {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            padding: 1em;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+
+            .video-container {
+                width: 70%;
+                height: 20em;
+                background-color: #e1e1e1;
+                border-radius: 0.5em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                img {
+                    width: 20%;
+                    height: 15em;
+                    border-radius: 8px;
+                }
+
+                .play-button {
+                    position: absolute;
+                    top: 38%;
+                    left: 35%;
+                    transform: translate(-50%, -50%);
+                    width: 60px;
+                    height: 60px;
+                    background-color: rgba(0, 0, 0, 0.6);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: rgba(0, 0, 0, 0.8);
+                    }
+
+                    .play-icon {
+                        color: white;
+                        font-size: 28px;
+                        margin-left: 4px;
+                    }
+                }
+            }
+
+            .product-footer {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-top: 16px;
+
+                img {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 4px;
+                    object-fit: cover;
+                }
+
+                .footer-info {
+                    h4 {
+                        margin: 0 0 4px 0;
+                        font-size: 0.9em;
+                        font-weight: 600;
+                        color: #333;
+                    }
+
+                    .footer-rating {
+                        display: flex;
+                        align-items: center;
+                        font-size: 0.8rem;
+                        color: black;
+
+                        p {
+                            margin: 0;
+                        }
+
+                        .stars {
+                            color: #f5a623;
+                        }
+
+                        span {
+                            color: #f28c8c;
+                        }
+                    }
+
+                    .footer-price {
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        color: black;
+                        margin-top: 4px;
+                    }
+                }
+            }
+        }
+
+    }
+
+
+}
+
+@media (max-width:768px) {
+
+    .video-container {
+        max-height: 15em;
+    }
+
+    .video-container img {
+        min-width: 80%;
+    }
+}

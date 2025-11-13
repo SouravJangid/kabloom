@@ -180,7 +180,7 @@ class GuestSignUpComponent extends React.Component {
                 localStorage.setItem('CustomerId', customer_id);
                 let cartObj = [{ total_items_count }];
                 this.props.dispatch(commonActionCreater(cartObj, 'CART_ITEMS_SUCCESS'));
-                this.props.history.push('/cart');
+                this.props.history.push('/store');
             } else {
                 console.log("---------inside verified------");
                 let cartObj = [{ total_items_count }];
@@ -189,7 +189,7 @@ class GuestSignUpComponent extends React.Component {
                 localStorage.setItem('cart_id', _get(data[0], 'result.cart_id', ''));
                 const customer_id = _get(data[0], 'result.customer_id');
                 localStorage.setItem('CustomerId', customer_id);
-                this.props.history.push('/cart');
+                this.props.history.push('/store');
             }
             // this.fetchCategories();
         } else if (message) {

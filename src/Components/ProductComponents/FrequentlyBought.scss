@@ -1,0 +1,134 @@
+.frequently-bought {
+  margin-top: 2rem;
+  color: #111;
+
+  h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .fbt-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .fbt-items {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    .plus-sign {
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 5em;
+      color:black;
+    }
+  }
+
+  .fbt-card {
+    width:16em;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+
+    &.selected {
+   background-color: #ffffff;
+    }
+
+    &:hover {
+      border-color: #ff7a00;
+    }
+
+    .img-wrapper {
+      position: relative;
+      width: 100%;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      background-color: #dcdcdc;
+      align-items: center;
+      border-radius: 5px;
+      margin-bottom: 8px;
+
+      img {
+        height: 7em;
+        border-radius: 6px;
+        object-fit: cover;
+      }
+
+      .check-icon {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        color: #ff7a00;
+        background: #fff;
+        border-radius: 50%;
+        font-size: 20px !important;
+      }
+    }
+
+    .item-details {
+      text-align: left;
+
+      .item-title {
+        font-size: 13px;
+        color: #333;
+        margin-bottom: 6px;
+        line-height: 1.3;
+      }
+
+      .item-price {
+        font-size: 14px;
+        color: #111;
+
+        strong {
+          font-weight: 600;
+        }
+
+        span {
+          font-size: 12px;
+          color: #777;
+          margin-left: 4px;
+        }
+      }
+    }
+  }
+
+  .total-section {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .total-text {
+      font-size: 12px;
+      margin-bottom: 10px;
+
+      span {
+        font-weight: 600;
+      }
+    }
+
+    .add-btn {
+      background-color: #ffd225;
+      border: none;
+      border-radius: 25px;
+      color: #111;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      width: 17em;
+
+      &:hover {
+        background-color: #ffc400;
+      }
+    }
+  }
+}

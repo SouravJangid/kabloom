@@ -1,77 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import './QuantitySelector.css';
 
-const QuantitySelector = ({ value = 1, onChange,disabled = false }) => {
-    const [quantity, setQuantity] = useState(value);
+const QuantitySelector = ({
+    value = 5,
+    onChange,
+    disabled = false,
+    max = 24,
+}) => {
+    const [open, setOpen] = useState(false);
+    const wrapperRef = useRef(null);
+    const selectedRef = useRef(null);
 
-    // Update internal state when prop value changes
     useEffect(() => {
-        setQuantity(value);
-    }, [value]);
+        const handleClickOutside = (e) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+                setOpen(false);
+            }
+        };
+        if (open) document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [open]);
 
-    const handleQuantityChange = (action) => {
-        let newQuantity = quantity;
-        
-        if (action === "add" && quantity < 24) {
-            newQuantity += 1;
-        } else if (action === "less" && quantity > 1) {
-            newQuantity -= 1;
+    useEffect(() => {
+        if (open && selectedRef.current) {
+            selectedRef.current.scrollIntoView({ block: 'center' });
         }
-        
-        updateQuantity(newQuantity);
+    }, [open]);
+
+    const toggleMenu = () => {
+        if (!disabled) setOpen((v) => !v);
     };
 
-    const handleInputChange = (e) => {
-        const value = parseInt(e.target.value);
-        setQuantity(value);
+    const selectQty = (num) => {
+        onChange && onChange(num);
+        setOpen(false);
     };
 
-    const handleInputBlur = (e) => {
-        let newQuantity = parseInt(e.target.value) || 1;
-        
-        // Ensure quantity is within bounds
-        if (newQuantity < 1) {
-            newQuantity = 1;
-        } else if (newQuantity > 24) {
-            newQuantity = 24;
-        }
-        
-        updateQuantity(newQuantity);
-    };
-
-    const updateQuantity = (newQuantity) => {
-        setQuantity(newQuantity);
-        if (onChange) {
-            onChange(newQuantity);
-        }
-    };
+    const stopProp = (e) => e.stopPropagation();
 
     return (
-        <div className="quantity-controls">
-            <button
-                type="button"
-                onClick={() => handleQuantityChange('less')}
-                disabled={quantity <= 1 || disabled}
-            >
-                -
-            </button>
-            <input
-                type="number"
-                value={quantity}
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                min="1"
-                max="24"
-                disabled={disabled}
-                className="input-number-no-spinners"
+        <div
+            ref={wrapperRef}
+            className={`quantity-wrapper ${disabled ? 'quantity-disabled' : ''}`}
+            onClick={toggleMenu}
+        >
+            <div className="quantity-label">
+                Quantity {value}
+            </div>
+
+            <ExpandMoreIcon
+                className="quantity-icon"
+                onMouseDown={(e) => {
+                    e.preventDefault();
+                    toggleMenu();
+                }}
             />
-            <button
-                type="button"
-                onClick={() => handleQuantityChange('add')}
-                disabled={quantity >= 24 || disabled}
-            >
-                +
-            </button>
+
+            {open && (
+                <ul className="quantity-menu" onClick={stopProp}>
+                    {Array.from({ length: max }, (_, i) => i + 1).map((n) => (
+                        <li
+                            key={n}
+                            ref={n === value ? selectedRef : null}
+                            className={`quantity-menu-item ${n === value ? 'selected' : ''}`}
+                            onClick={() => selectQty(n)}
+                        >
+                            Quantity {n}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };

@@ -24,7 +24,6 @@ import { commonActionCreater } from '../../../Redux/Actions/commonAction';
 import { Container, Row, Col } from 'reactstrap'
 import proImg from '../../../assets/images/party-can.png';
 import watermark from '../../../assets/images/watermark.jpg';
-import CartImage from '../../../assets/images/Cart_Image.png';
 
 import { stateDropDown } from '../../../assets/data/dropdown';
 import { Loader } from '../../../Global/UIComponents/LoaderHoc';
@@ -474,7 +473,7 @@ class Address extends React.Component {
                         <Row className="no-gutters justify-content-lg-between secMinHeight">
                             <Col lg={5} className="order-1 d-none d-lg-block order-md-2">
                                 <div className="productImgSection">
-                                    <img src={CartImage} alt='watermark' className="imgProduct img-responsive"></img>
+                                    <img src={watermark} alt='watermark' className="imgProduct img-responsive"></img>
                                 </div>
                             </Col>
                             <Col lg={6} className="d-flex flex-column order-2 order-md-1">

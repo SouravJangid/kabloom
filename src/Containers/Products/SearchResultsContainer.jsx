@@ -17,11 +17,13 @@ class SearchResultsContainer extends React.Component {
     super(props);
     this.state = {
       productList: [],
+      filteredProducts: [],
       page: 1,
       limit: 20,
       totalPages: 1,
       isLoading: false,
       errorText: null,
+      sortBy: "relevance",  
     };
   }
 
@@ -79,12 +81,15 @@ class SearchResultsContainer extends React.Component {
         const paginationData = _get(data, "pagination", {});
         const totalPages = Number(paginationData?.total_page) || 1;
 
-        this.setState({
-          productList: Array.isArray(productsArr) ? productsArr : [],
-          totalPages,
-          page,
-          isLoading: false,
-        });
+        this.setState(
+          {
+            productList: Array.isArray(productsArr) ? productsArr : [],
+            totalPages,
+            page,
+            isLoading: false,
+          },
+          () => this.applySorting(this.state.sortBy)
+        );
       },
       errorCb: () => {
         this.setState({
@@ -95,10 +100,56 @@ class SearchResultsContainer extends React.Component {
       dontShowMessage: true,
     });
   };
+  getLowestPrice = (product) => {
+    const speedList = _get(product, "child[0].speed_id", []);
+    if (!Array.isArray(speedList) || speedList.length === 0) return 0;
+
+    const prices = speedList
+      .map((s) => parseFloat(s.Price))
+      .filter((p) => !isNaN(p));
+    return prices.length > 0 ? Math.min(...prices) : 0;
+  };
+
+
+handleSortChange = (value) => {
+  this.applySorting(value);
+};
+
+applySorting = (sortBy) => {
+  const { productList } = this.state;
+  let sorted = [...productList];
+
+  switch (sortBy) {
+    case "priceLowHigh":
+      sorted.sort((a, b) => this.getLowestPrice(a) - this.getLowestPrice(b));
+      break;
+    case "priceHighLow":
+      sorted.sort((a, b) => this.getLowestPrice(b) - this.getLowestPrice(a));
+      break;
+    case "nameAZ":
+      sorted.sort((a, b) =>
+        (a.name || "").localeCompare(b.name || "", undefined, {
+          sensitivity: "base",
+        })
+      );
+      break;
+    case "nameZA":
+      sorted.sort((a, b) =>
+        (b.name || "").localeCompare(a.name || "", undefined, {
+          sensitivity: "base",
+        })
+      );
+      break;
+    default:
+      sorted = [...productList];
+  }
+
+  this.setState({ filteredProducts: sorted, sortBy });
+};
+
 
   handlePageClick = (selected) => {
     const selectedPage = Number(selected) + 1;
-    console.log("📄 Pagination clicked. Go to page:", selectedPage);
     this.setState({ page: selectedPage }, () => {
       this.fetchProducts(selectedPage, this.state.limit);
     });
@@ -112,18 +163,58 @@ class SearchResultsContainer extends React.Component {
   };
 
   render() {
-    const { productList, page, limit, totalPages, isLoading, errorText } =
-      this.state;
+    const {
+      filteredProducts,
+      page,
+      limit,
+      totalPages,
+      isLoading,
+      errorText
+        } = this.state;
     const searchTerm = this.getQueryParam();
 
     return (
       <React.Fragment>
         <CssBaseline />
-        <div className="page-content-container">
-          <h2 className="mb-4">Search Results for "{searchTerm}"</h2>
+        <div className="page-content-container" style={{ padding: "10px 15px" }}>
           <Container fluid className="proCategoryList">
+          <div
+  className="d-flex justify-content-between align-items-center flex-wrap mb-3"
+  style={{ gap: "10px" }}
+>
+  <h2 className="mb-0">Search Results for "{searchTerm}"</h2>
+
+  <div
+    className="d-flex align-items-center"
+    style={{
+      gap: "10px",
+      flexShrink: 0,
+      whiteSpace: "nowrap",
+    }}
+  >
+      <Select
+      value={this.state.sortBy}
+      onChange={this.handleSortChange}
+      style={{
+        minWidth: "160px",
+        fontSize: "14px",
+        border: "none"
+      }}
+      options={[
+        { value: "relevance", label: "Relevance" },
+        { value: "nameAZ", label: "Name: A–Z" },
+        { value: "nameZA", label: "Name: Z–A" },
+        { value: "priceLowHigh", label: "Price: Low–High" },
+        { value: "priceHighLow", label: "Price: High–Low" },
+      ]}
+    />
+  </div>
+</div>
+
+
+
             <div className="productCategoryList-wrapper">
-              {_isEmpty(productList) && !isLoading ? (
+              {_isEmpty(filteredProducts) && !isLoading ? (
                 <div
                   style={{
                     display: "flex",
@@ -141,7 +232,7 @@ class SearchResultsContainer extends React.Component {
                 <div className="proListsection">
                   {isLoading && <LoaderOverLay />}
 
-                  {!_isEmpty(productList) && (
+                  {!_isEmpty(filteredProducts) && (
                     <div
                       className="pagination-container"
                       style={{
@@ -152,11 +243,6 @@ class SearchResultsContainer extends React.Component {
                           window.innerWidth >= 768
                             ? "flex-end"
                             : "center",
-                        paddingRight:
-                          typeof window !== "undefined" &&
-                          window.innerWidth >= 768
-                            ? 24
-                            : 0,
                         alignItems: "center",
                         gap: "10px",
                         flexWrap: "nowrap",
@@ -190,12 +276,14 @@ class SearchResultsContainer extends React.Component {
                     </div>
                   )}
 
+
                   <ProductsListing
                     {...this.props}
-                    productListingAfterSort={productList}
+                    productListingAfterSort={filteredProducts}
                   />
 
-                  {!_isEmpty(productList) && (
+
+                  {!_isEmpty(filteredProducts) && (
                     <div
                       className="mt-2 pagination-container"
                       style={{
@@ -206,11 +294,6 @@ class SearchResultsContainer extends React.Component {
                           window.innerWidth >= 768
                             ? "flex-end"
                             : "center",
-                        paddingRight:
-                          typeof window !== "undefined" &&
-                          window.innerWidth >= 768
-                            ? 24
-                            : 0,
                         alignItems: "center",
                         gap: "10px",
                         flexWrap: "nowrap",

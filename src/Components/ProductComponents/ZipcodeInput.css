@@ -1,69 +1,76 @@
-.zipcode-input-wrapper{
-    display: flex;
-    gap: 8px;
-    flex-direction: column;
+.zipcode-input-wrapper {
+  width: 100%;
+  max-width: 320px;
 }
 
-
-.zipcode-input{
-    /* inherit the project's font (do not override) */
-    font-size: 1rem;
-    padding: 6px 8px 2px;
-    text-align: center;
-    border: none;
-    border-bottom: 2px solid #ccc;
-    background: transparent;
-    outline: none;
-    transition: border-color .15s ease, box-shadow .15s ease;
-    box-sizing: border-box;
-    /* allow natural sizing but constrain so layout stays compact */
-    width: 120px;
+.zipcode-input-row {
+  display: flex;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+  height: 3em; 
+  margin-bottom: 1em;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
 
-.zipcode-input:focus{
-    border-bottom-color: #f63;
-    box-shadow: 0 4px 8px rgba(246,99,63,0.06);
+.zipcode-input {
+  flex: 1;
+}
+.zipcode-input .MuiInputBase-root {
+  height: 100%;
+  padding: 0 8px;
+}
+.zipcode-input .MuiInputBase-input {
+  font-weight: 600;
+  font-size: 1rem;    
+  color: #222;
+  padding: 0;
+}
+.zipcode-input .MuiOutlinedInput-notchedOutline {
+  border: none;
 }
 
-.zipcode-check-btn{
-    padding: 6px 10px;
-    border: 2px solid #2a9d2a;
-    border-radius: 12px;
-    cursor: pointer;
-    background: #fff;
-    color: #2a9d2a;
-    font-size: 16px;
-    font-weight: 600;
-    width: 125px;
+.zipcode-submit-btn.MuiButton-contained {
+  background-color: #fb8c00 ;
+  color: #fff ;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0 16px; 
+  min-width: 80px; 
+  height: 100%;
 }
 
-.zipcode-check-btn:disabled{
-    opacity: 0.6;
-    cursor: not-allowed;
+.zipcode-submit-btn.MuiButton-contained span.MuiButton-label{
+    text-transform: capitalize;
+}
+.zipcode-submit-btn.MuiButton-contained{
+    background-color: #fb8c00 ;
+}
+.zipcode-submit-btn.MuiButton-contained:hover {
+  background-color: #f57c00 ;
+}
+.zipcode-submit-btn.MuiButton-contained.Mui-disabled {
+  background-color: #ffb74d ;
 }
 
-.zipcode-helper{
-    font-size: 12px;
-    color: #ff0000;
-    margin-top: 4px;
-    text-align: center;
-    font-weight: 500;
-    height: 23px;
+.zipcode-error {
+  color: #f44336;
+  font-size: 0.75rem; 
+  margin-top: 4px;
 }
 
-.zipcode-verified{
-    color: #2a9d2a;
-    font-weight: 600;
+.zipcode-success {
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  color: #e91e63;
+  font-size: 0.85rem;  
+  font-weight: 500;
 }
 
-.zipcode-input.verified{
-    border-bottom-color: #2a9d2a;
-}
-
-.visually-hidden{
-    position: absolute !important;
-    height: 1px; width: 1px;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    white-space: nowrap; /* added line */
+.zipcode-location-icon {
+  font-size: 1rem;
+  color: #000;
+  margin-right: 4px;
 }

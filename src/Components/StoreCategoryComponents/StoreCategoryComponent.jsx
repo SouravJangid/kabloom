@@ -1,11 +1,11 @@
 import React from "react";
-import Avatar from "@material-ui/core/Avatar";
+// import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import LocalShippingOutlinedIcon from "@material-ui/icons/LocalShippingOutlined";
-import Typography from "@material-ui/core/Typography";
-import withStyles from "@material-ui/core/styles/withStyles";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
+// import Typography from "@material-ui/core/Typography";
+// import withStyles from "@material-ui/core/styles/withStyles";
+// import CircularProgress from "@material-ui/core/CircularProgress";
+// import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 import { connect } from "react-redux";
 import {
   isArray as _isArray,
@@ -17,25 +17,25 @@ import {
   find as _find,
   filter as _filter,
 } from "lodash";
+// import {
+//   Card,
+//   CardImg,
+//   CardText,
+//   CardBody,
+//   CardTitle,
+//   CardSubtitle,
+  // Button,
+// } from "reactstrap";
+// import ProductDetails from "../ProductComponents/ProductDetails";
+// import everestVodka from "../../assets/images/Titos.jpg";
+// import { commonActionCreater } from "../../Redux/Actions/commonAction";
+// import { ProductClick, PageView } from "../../Global/helper/react-ga";
 import {
-  Card,
-  CardImg,
-  CardText,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  Button,
-} from "reactstrap";
-import ProductDetails from "../ProductComponents/ProductDetails";
-import everestVodka from "../../assets/images/Titos.jpg";
-import { commonActionCreater } from "../../Redux/Actions/commonAction";
-import { ProductClick, PageView } from "../../Global/helper/react-ga";
-import {
-  cleanEntityData,
-  deliveryMethods,
+  // cleanEntityData,
+  // deliveryMethods,
   productListingDeliveryMethods,
 } from "../../Global/helper/commonUtil";
-import WithLoading from "../../Global/UIComponents/LoaderHoc";
+// import WithLoading from "../../Global/UIComponents/LoaderHoc";
 
 // const styles = theme => ({
 //     main: {
@@ -108,41 +108,41 @@ class ProductsListing extends React.Component {
 
   productDetailsFetchError = () => {};
 
-  redirectToPDP = (product, parentIndex) => {
-    const bottleSize = _get(
-      product,
-      `child[${this.getActiveChildIndex(parentIndex)}].bottle_size`,
-      ""
-    );
-    const childId = _get(
-      product,
-      `child[${this.getActiveChildIndex(parentIndex)}].id`,
-      ""
-    );
-    const bottleSizeDetail = _find(_get(product, "child"), [
-      "bottle_size",
-      bottleSize,
-    ]);
-    const payload = cleanEntityData({
-      productId: _get(product, "id"),
-      name: _get(product, "name"),
-      variant: bottleSize,
-      price: _get(bottleSizeDetail, "price")
-        ? Number(_get(bottleSizeDetail, "price"))
-        : undefined,
-    });
-    ProductClick(payload);
-    PageView();
+  redirectToPDP = (productId) => {
+    // const bottleSize = _get(
+    //   product,
+    //   `child[${this.getActiveChildIndex(parentIndex)}].bottle_size`,
+    //   ""
+    // );
+    // const childId = _get(
+    //   product,
+    //   `child[${this.getActiveChildIndex(parentIndex)}].id`,
+    //   ""
+    // );
+    // const bottleSizeDetail = _find(_get(product, "child"), [
+    //   "bottle_size",
+    //   bottleSize,
+    // ]);
+    // const payload = cleanEntityData({
+    //   productId: _get(product, "id"),
+    //   name: _get(product, "name"),
+    //   variant: bottleSize,
+    //   price: _get(bottleSizeDetail, "price")
+    //     ? Number(_get(bottleSizeDetail, "price"))
+    //     : undefined,
+    // });
+    // ProductClick(payload);
+    // PageView();
 
-    this.props.dispatch(commonActionCreater(bottleSize, "SET_BOTTLE_SIZE"));
-    this.props.dispatch(commonActionCreater(childId, "SET_BOTTLE_ID"));
-    // let categoryName = _get(this.props, `categoriesList[${this.props.tabValue}].category_name`, null);
-    // let categoryID = _get(this.props, `categoriesList[${this.props.tabValue}].category_id`, null)
-    let categoryName = this.state.categoryType;
-    let categoryID = this.state.categoryId;
-    let ProductID = _get(product, "id", null);
+    // this.props.dispatch(commonActionCreater(bottleSize, "SET_BOTTLE_SIZE"));
+    // this.props.dispatch(commonActionCreater(childId, "SET_BOTTLE_ID"));
+    // // let categoryName = _get(this.props, `categoriesList[${this.props.tabValue}].category_name`, null);
+    // // let categoryID = _get(this.props, `categoriesList[${this.props.tabValue}].category_id`, null)
+    // let categoryName = this.state.categoryType;
+    // let categoryID = this.state.categoryId;
+    // let ProductID = _get(product, "id", null);
     // this.props.history.push(`/store/category/${categoryName}/${categoryID}/${ProductID}`);
-    this.props.history.push(`/store/${ProductID}`);
+    this.props.history.push(`/store/${productId}`);
   };
   setBottleSizeIndex = (parentBottleIndex, childBottleIndex) => {
     let data = this.state.topProductActiveIndex;
@@ -164,8 +164,8 @@ class ProductsListing extends React.Component {
   };
 
   render() {
-    const { productListingData, classes } = this.props;
     let ProductList = [];
+    // const { productListingData, classes } = this.props;
     // let mapProductSizeButton = ({ data }) => _map(data, (d, index) => {
     //     if (index === 0) {
     //         return (
@@ -178,30 +178,31 @@ class ProductsListing extends React.Component {
     //     }
     // });
 
-    let mapProductSizeButton = (data, parentIndex) =>
-      _map(data, (subItem, childIndex) => {
-        return (
-          <React.Fragment key={childIndex}>
-            <Button
-              className={
-                _get(
-                  this.state,
-                  `topProductActiveIndex[${parentIndex}].childBottleIndex`,
-                  0
-                ) === childIndex
-                  ? "active"
-                  : ""
-              }
-              onClick={() => this.setBottleSizeIndex(parentIndex, childIndex)}
-              onMouseOver={() =>
-                this.setBottleSizeIndex(parentIndex, childIndex)
-              }
-            >
-              {subItem.bottle_size}
-            </Button>
-          </React.Fragment>
-        );
-      });
+    // let mapProductSizeButton = (data, parentIndex) =>
+    //   _map(data, (subItem, childIndex) => {
+    //     return (
+    //       <React.Fragment key={childIndex}>
+    //         <Button
+    //           className={
+    //             _get(
+    //               this.state,
+    //               `topProductActiveIndex[${parentIndex}].childBottleIndex`,
+    //               0
+    //             ) === childIndex
+    //               ? "active"
+    //               : ""
+    //           }
+    //           onClick={() => this.setBottleSizeIndex(parentIndex, childIndex)}
+    //           onMouseOver={() =>
+    //             this.setBottleSizeIndex(parentIndex, childIndex)
+    //           }
+    //         >
+    //           {subItem.bottle_size}
+    //         </Button>
+    //       </React.Fragment>
+    //     );
+    //   });
+
     let mapSpeedButton = (data, parentIndex) =>
       _map(data, (subItem, childIndex) => {
         subItem = productListingDeliveryMethods[`${subItem}`];
@@ -214,7 +215,8 @@ class ProductsListing extends React.Component {
           </React.Fragment>
         );
       });
-    _isArray(_get(this.props, "productListingAfterSort", [])) &&
+  
+      _isArray(_get(this.props, "productListingAfterSort", [])) &&
       this.props.productListingAfterSort.map((p, parentIndex) => {
         // let sizeButtons = !_isEmpty(_get(product, 'child')) ? mapProductSizeButton({ data: _get(product, 'child')}) : []
         let smallImage = "";
@@ -225,7 +227,7 @@ class ProductsListing extends React.Component {
         });
 
         const filteredChildItem = _filter(_get(p, "child", []), (i) => {
-          if (_get(i, "bottle_size") != "0") {
+          if (_get(i, "bottle_size") !== "0") {
             return i;
           }
         });
@@ -244,7 +246,7 @@ class ProductsListing extends React.Component {
         const productDeliveryTypeArray = Array.from(productDeliveryType);
         ProductList.push(
           <div className="storeItemsList" key={_get(product, "id")}>
-            <div onClick={() => this.redirectToPDP(product, parentIndex)}>
+            <div onClick={() => this.redirectToPDP(_get(product, "id"))}>
               {/* <div style={{ backgroundImage: `url(${_get(product, 'image')})` }} className="listProductImg"> */}
               <div
                 style={{
@@ -294,6 +296,8 @@ class ProductsListing extends React.Component {
           </div>
         );
       });
+
+      
     return (
       <React.Fragment>
         <CssBaseline />

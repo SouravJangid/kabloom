@@ -62,8 +62,8 @@ class Footer extends React.Component {
     handleCreateAccountClick = () => {
         this.props.history.push("/createAccount");
     }
-    handleLogout = async () => {
-        await this.props.dispatch(logoutActionCreator());
+    handleLogout = () => {
+        this.props.dispatch(logoutActionCreator());
         this.props.history.push("");
         window.location.reload();
 
@@ -77,7 +77,7 @@ class Footer extends React.Component {
                 <Container fluid={true} className="footerLayout d-flex align-items-center py-4  p-md-3">
                     <Container className="justify-content-center ">
                         <Row className="w-100  no-gutters justify-content-xl-between justify-content-center ">
-                            <Col xl={'8'} className="mb-4 mb-xl-0" >
+                            <Col  xl={'8'} className="mb-4 mb-xl-0" >
                                 <div className="d-flex flex-wrap flex-row justify-content-center justify-content-xl-start footerLink">
                                     <a href="/contact-us">Contact Us</a>
                                     <a href="/faq">FAQs</a>
@@ -85,10 +85,10 @@ class Footer extends React.Component {
                                     <a href="/terms-conditions">Terms & Conditions</a>
                                     <a href="/about-us">About Us</a>
                                     <a href="/refund-policy">Refund Policy</a>
-
+                                    
                                 </div>
                             </Col>
-                            <Col xl={'4'} className="d-flex drinkText flex-row justify-content-center justify-content-xl-end" >
+                            <Col  xl={'4'} className="d-flex drinkText flex-row justify-content-center justify-content-xl-end" >
                                 <span className="pb-2">© {new Date().getFullYear()} Kabloom, All Rights Reserved</span>
                                 {/* <span>Please drink responsible</span> */}
                             </Col>

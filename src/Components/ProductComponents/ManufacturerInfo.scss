@@ -1,0 +1,285 @@
+.manufacturer {
+  color: #111;
+  margin-top: 2rem;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .manufacturer-top {
+    margin: 0 14em;
+
+    .top-banner {
+      position: relative;
+      margin-bottom: 1em;
+
+      .banner-img {
+        width: 100%;
+
+      }
+    }
+
+    .top-main {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 16px;
+      align-items: flex-start;
+
+      .img-card {
+        position: relative;
+
+        img {
+          width: 100%;
+          border-radius: 6px;
+        }
+      }
+
+      .main-center {
+        font-weight: bold;
+
+        h4 {
+          font-size: 12px;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+
+        em {
+          display: block;
+          font-size: 12px;
+          font-style: italic;
+          margin-bottom: 8px;
+        }
+
+        p {
+          font-size: 12px;
+          line-height: 1.5;
+          color: #333;
+        }
+      }
+
+      .main-right {
+        .logo-card {
+          text-align: left;
+
+          img {
+            width: 100%;
+            height: 10em;
+            border-radius: 4px;
+            margin-bottom: 8px;
+          }
+
+          h5 {
+            font-size: 15px;
+            font-weight: 600;
+          }
+
+          p {
+            font-size: 10px;
+            line-height: 1.4;
+            color: #444;
+          }
+        }
+      }
+    }
+  }
+
+  .manufacturer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 0.5em 14em;
+
+    .feature-card {
+      text-align: left;
+
+      img {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      h5 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      p {
+        font-size: 12px;
+        line-height: 1.4;
+        color: #444;
+      }
+    }
+  }
+
+  .manufacturer-bottom {
+    margin: 0 14em;
+
+    .top-banner {
+      position: relative;
+
+      .banner-img {
+        width: 100%;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        height: 15em;
+      }
+    }
+
+    .top-main {
+      display: flex;
+
+      .img-card {
+        position: relative;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .main-right {
+        padding-left: 2em;
+        display: flex;
+
+        .gift-touch-container {
+          max-width: 800px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+        }
+
+        .gift-title {
+          font-size: 20px;
+          font-weight: bold;
+          color: #333;
+          text-align: center;
+        }
+
+        .gift-subtitle {
+          font-size: 16px;
+          color: #555;
+          font-style: italic;
+        }
+
+        .gift-steps {
+          list-style: none;
+          counter-reset: step-counter;
+        }
+
+        .gift-step {
+          position: relative;
+          font-size: 14px;
+          color: #000000;
+          padding-left: 30px;
+        }
+
+        .step-letter {
+          position: absolute;
+          left: 0;
+          font-weight: bold;
+          color: #000000;
+        }
+
+        .gift-footer {
+          font-size: 16px;
+          color: #444;
+        }
+
+        .bullet {
+          color: #000000;
+          font-weight: bold;
+          margin-right: 8px;
+        }
+
+        .loading {
+          text-align: center;
+          padding: 40px;
+          color: #999;
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .top-main {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (min-width:768px) and (max-width:1024px) {
+
+  .manufacturer .manufacturer-top,
+  .manufacturer .manufacturer-bottom,
+  .manufacturer .manufacturer-grid {
+    margin: 0 4em;
+  }
+}
+
+@media (max-width:768px) {
+
+  .manufacturer .manufacturer-top,
+  .manufacturer .manufacturer-bottom,
+  .manufacturer .manufacturer-grid {
+    margin: 0;
+  }
+
+  .top-main {
+    display: flex;
+    flex-direction: row;
+
+    .main-right {
+      .logo-card img {
+        max-height: 5em;
+      }
+    }
+  }
+
+  .manufacturer-bottom .top-main .main-right .gift-touch-container {
+    .gift-title {
+      font-size: 12px;
+    }
+
+    .gift-subtitle {
+      font-size: 10px;
+    }
+
+    .gift-steps {
+      font-size: 12px;
+    }
+
+    .gift-footer {
+      font-size: 10px;
+    }
+  }
+
+  .manufacturer .manufacturer-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width:426px) {
+
+  .main-container {
+    flex-direction: column;
+  }
+
+  .manufacturer .manufacturer-top .top-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .manufacturer .manufacturer-bottom .top-main {
+    flex-direction: column;
+
+    .main-right {
+      padding: 0;
+    }
+  }
+
+}
