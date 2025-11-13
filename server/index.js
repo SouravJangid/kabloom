@@ -15,12 +15,13 @@ app.use(cors());
 
 // const application_bff_url = "https://dev.drinkindia.com/api";
 
-// const application_bff_url = "https://devshop.kabloom.com/api";
-const application_bff_url = "https://apiuat.kabloom.com/";
+// const application_bff_url = "https://apiuat.kabloom.com/";
 
 // const application_bff_url = "https://dev.drinksbucket.com/api";
 // const application_bff_url   = "https://drinksbucket.com/api";
 
+const application_bff_url = "https://devshop.kabloom.com/api";
+// const application_bff_url = "https://kabloom.com/api";
 // const application_bff_url = "https://apiprod.drinkindia.com/api";
 
 // const application_bff_url = "https://apidev.drinksbucket.com";
