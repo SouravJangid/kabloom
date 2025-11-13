@@ -11,6 +11,7 @@ import { isMobile, isTablet } from 'react-device-detect';
 import Scrollbar from "react-scrollbars-custom";
 import proImg from '../../assets/images/party-can.png';
 import waterMark from '../../assets/images/watermark.jpg';
+import CartImage from '../../assets/images/Cart_Image.png';
 import { Container, Row, Col } from 'reactstrap'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Loader } from "../../Global/UIComponents/LoaderHoc";
@@ -501,7 +502,7 @@ class CartContainer extends React.Component {
                                     </LoaderButton> }
                                 </div>
                                 <div className="productImgSection ImgSectionwt">
-                                    <img src={waterMark} alt="ProductImage" className="imgProduct"></img>
+                                    <img src={CartImage} alt="ProductImage" className="imgProduct"></img>
                                 </div>
                             </div>
                         </Col>

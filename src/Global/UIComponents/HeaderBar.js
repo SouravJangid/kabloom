@@ -85,8 +85,8 @@ class HeaderBar extends React.Component {
   handleCreateAccountClick = () => {
     this.props.history.push("/createAccount");
   };
-  handleLogout = () => {
-    this.props.dispatch(logoutActionCreator());
+  handleLogout = async () => {
+    await this.props.dispatch(logoutActionCreator());
     this.props.history.push("");
     window.location.reload();
   };

@@ -46,6 +46,7 @@ import "../../assets/stylesheets/main.less";
 import { data as productdatas } from "../../assets/data/productData";
 import StoreCategoryPagination from "../../Components/StoreCategoryComponents/StorgeCategoryPagination";
 import { Select } from "antd";
+import { sortingMap } from "../../Global/Constants/commonconstants";
 
 const styles = (theme) => ({
   main: {
@@ -335,6 +336,58 @@ class ProductsContainer extends React.Component {
   //     this.setState({ tabValue: index, isLoading: true });
   //     this.fetchProducts(selectedTab);
   // };
+
+  // Convert a selectedFilters map (e.g. { "type__990": true, "type__997": true, "price__50to75": true })
+    // into the request body expected by the filter API.
+    convertSelectedFilterToReqBody = (selectedFilters = {}) =>{
+        const result = {
+            catid: [],
+            priceranges: [],
+            size: []
+        };
+
+        const typeIds = [];
+
+        Object.entries(selectedFilters).forEach(([key, isSelected]) => {
+            if (!isSelected) return;
+            const sepIndex = key.indexOf('__');
+            if (sepIndex === -1) return;
+            const field = key.slice(0, sepIndex);
+            const raw = key.slice(sepIndex + 2);
+
+            if (field === 'type') {
+                typeIds.push(String(raw));
+            } else if (field === 'price') {
+                result.priceranges.push(String(raw));
+            } else if (field === 'size') {
+                result.size.push(String(raw));
+            } else {
+                if (!result[field]) result[field] = [];
+                result[field].push(String(raw));
+            }
+        });
+
+        // Use the explicit parentCategoryId (papaId) from route params when provided.
+        // Behavior: if papaId is passed in options.parentCategoryId, use it as parent and
+        // put the remaining selected "type" ids into `catid`. If papaId is NOT provided
+        // we will treat all selected type ids as child ids (no implicit parent selection).
+        const categoryId = _get(this.props, 'match.params.categoryId', '');
+        if (typeIds.length > 0) {
+            // always filter out the parent if it's present; if parent is empty this just returns a copy
+            const catids = typeIds.filter((id) => String(id) !== categoryId);
+
+            result.catid = Array.from(new Set(catids.map(String)));
+        } else {
+            result.catid = [];
+        }
+        result.parent_category_id = categoryId;
+
+        result.priceranges = Array.from(new Set(result.priceranges.map(String)));
+        result.size = Array.from(new Set(result.size.map(String)));
+
+        return result;
+    }
+
 
   fetchProducts = (categoryID, page, limit) => {
     const zipcode = localStorage.getItem("zipcode");
@@ -686,26 +739,48 @@ class ProductsContainer extends React.Component {
     return parentFilter;
   };
 
-  handleChange = ({ parentIndex, childIndex, child, categoryName }) => {
-    // console.log(parentIndex, childIndex, child,categoryName, 'check working' );
+  getFilterAPIBody = (filterBodyUpdated) => { 
+    let filterAPIBody = _reduce(filterBodyUpdated, (acc, val) => {
+        if (acc[`${_get(val, 'parameter')}`]) {
+            acc[`${_get(val, 'parameter')}`].push(_get(val, 'value'));
+        } else {
+            acc[`${_get(val, 'parameter')}`] = [_get(val, 'value')];
+        }
+        return acc;
+    }, {});
+    let newCatgoryFilter = _get(filterAPIBody, 'catid');
+    filterAPIBody = {
+        ...filterAPIBody,
+        catid: newCatgoryFilter
+    };
+    return filterAPIBody;
+  }
 
-    console.log(this.state.parentFilters, "check 12", child);
-    // state backup in case of mobile view
+  backupFilterDataInMobileView = () => {
     if (this.state.isMobileFilterSelectedFirstTime) {
-      const initialParFltr = _cloneDeep(this.state.parentFilters);
-      const initialselFltr = { ...this.state.selectedFilters };
-      const initialFltrBdy = _cloneDeep(this.state.filterBody);
 
-      this.setState({
-        parentFiltersBK: initialParFltr,
-        selectedFiltersBK: initialselFltr,
-        filterBodyBK: initialFltrBdy,
-        isMobileFilterSelectedFirstTime: false,
-        isLoading: true,
-      });
-    }
+        const initialParFltr = _cloneDeep(this.state.parentFilters);
+        const initialselFltr = { ...this.state.selectedFilters };
+        const initialFltrBdy = _cloneDeep(this.state.filterBody);
 
-    this.setState({ isLoading: true, isMobileFilterSelectedFirstTime: false });
+
+        this.setState({
+            parentFiltersBK: initialParFltr,
+            selectedFiltersBK: initialselFltr,
+            filterBodyBK: initialFltrBdy,
+            isMobileFilterSelectedFirstTime: false,
+            isLoading: true
+        });
+    };
+
+    this.setState({ isLoading: true, isMobileFilterSelectedFirstTime: false, });
+  }
+
+  handleChange = ({ parentIndex, childIndex, child, categoryName }) => {
+      // console.log(parentIndex, childIndex, child,categoryName, 'check working' );
+
+      // state backup in case of mobile view
+      this.backupFilterDataInMobileView();
 
     const childSelectedFlag = child.selected;
 
@@ -851,19 +926,7 @@ class ProductsContainer extends React.Component {
 
     if (!this.state.isMobileFilter) {
       // creating body for filter api
-      let filterAPIBody = _reduce(
-        filterBodyUpdated,
-        (acc, val) => {
-          if (acc[`${_get(val, "parameter")}`]) {
-            acc[`${_get(val, "parameter")}`].push(_get(val, "value"));
-          } else {
-            acc[`${_get(val, "parameter")}`] = [_get(val, "value")];
-          }
-          return acc;
-        },
-        {}
-      );
-      let newCatgoryFilter = _get(filterAPIBody, "catid");
+      let filterAPIBody = this.getFilterAPIBody(filterBodyUpdated)
 
       // console.log(newCatgoryFilter, 'pare12')
       // if (_get(filterAPIBody, 'catid').length >= 1) {
@@ -874,11 +937,6 @@ class ProductsContainer extends React.Component {
       //     })
       // }
 
-      filterAPIBody = {
-        ...filterAPIBody,
-        catid: newCatgoryFilter,
-      };
-      let initial;
       this.handleFilterChange({ data: filterAPIBody });
     }
   };
@@ -1000,6 +1058,20 @@ class ProductsContainer extends React.Component {
     // });
   };
 
+  handleSortApply = (sortby) => {
+      // Preserve currently applied filters and add sort_by so we don't lose filters.
+      // Reset to first page when sort changes.
+      this.setState({ page: 0 }, () => {
+          const existingFilterBody = this.convertSelectedFilterToReqBody(this.state.selectedFilters);
+          const sortAPIBody = {
+              ...existingFilterBody,
+              sort_by: sortby
+          };
+          // Reuse existing filter handler which calls the backend endpoint and request page 1
+          this.handleFilterChange({ data: sortAPIBody, pageNo: 1, limitNo: this.state.limit });
+      });
+  }
+
   handleFilterApply = () => {
     // creating body for filter api
     const filterAPIBody = _reduce(
@@ -1091,7 +1163,6 @@ class ProductsContainer extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
     const { isLoading } = this.state;
     console.log(this.state.productList, "products");
 
@@ -1120,7 +1191,7 @@ class ProductsContainer extends React.Component {
               <h1>{_get(this.props, "match.params.categoryName", "")}</h1>
 
               <div className="d-flex align-items-center">
-                {errorText == null ? (
+                {errorText == null  && false ? (
                   <div className="mr-2">
                     <ButtonDropdown
                       left
@@ -1135,29 +1206,12 @@ class ProductsContainer extends React.Component {
                         ></SortIcon>
                       </DropdownToggle>
                       <DropdownMenu>
-                        {/* <DropdownItem><div onClick={() => this.sortData('Popular')}>Popular</div></DropdownItem>
-                                        <DropdownItem><div onClick={() => this.sortData('Low')}>Price-Low to High</div></DropdownItem>
-                                        <DropdownItem><div onClick={() => this.sortData('High')}>Price- High to Low</div></DropdownItem> */}
-                        <DropdownItem>
-                          <div onClick={() => this.sortData("A")}>
-                            Name- A to Z
-                          </div>
-                        </DropdownItem>
-                        <DropdownItem>
-                          <div onClick={() => this.sortData("Z")}>
-                            Name- Z to A
-                          </div>
-                        </DropdownItem>
-                        <DropdownItem>
-                          <div onClick={() => this.sortData("high")}>
-                            Price- High to Low
-                          </div>
-                        </DropdownItem>
-                        <DropdownItem>
-                          <div onClick={() => this.sortData("low")}>
-                            Price- Low to High
-                          </div>
-                        </DropdownItem>
+                        {/* Use server-side sorting via filter API: pass sort_by key */}
+                        {Object.keys(sortingMap).map((sortKey) => (
+                            <DropdownItem key={sortKey}>
+                                <div onClick={() => this.handleSortApply(sortKey)}>{sortingMap[sortKey]}</div>
+                            </DropdownItem>
+                        ))}
                       </DropdownMenu>
                     </ButtonDropdown>
                   </div>

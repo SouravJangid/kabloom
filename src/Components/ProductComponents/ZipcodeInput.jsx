@@ -20,7 +20,7 @@ const ZipcodeInput = ({ zipcode, onChange, onCheck, loading, verified = false, p
     useEffect(() => {
         if (!isPropMessageActive) {
             if (loading) {
-                setMessage('Checking...');
+                setMessage('Verifying...');
             } else if (currZipCode.length < zipcodeLength) {
                 setMessage(`Enter ${zipcodeLength}-digit zipcode to enable fields`);
             } else {

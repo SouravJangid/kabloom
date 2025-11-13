@@ -50,6 +50,12 @@ const styles = (theme) => ({
       },
     },
   },
+  searchButton: {
+    background: "none",
+    "&:hover": {
+      background: "none",
+    },
+  },
   icon: {
     fontSize: "2.6rem",
     color: "#890a0a",
@@ -255,6 +261,7 @@ class SearchProductsContainer extends React.Component {
                             this.setState({ isShowtoggle: false });
                         }}
                         edge="end"
+                        className={classes.searchButton}
                       >
                         <SearchIcon className={classes.icon} />
                       </IconButton>

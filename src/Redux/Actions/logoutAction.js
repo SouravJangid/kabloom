@@ -3,14 +3,14 @@ import { persistor } from '../../index';
 import { PURGE } from 'redux-persist';
 
 
-export const logoutActionCreator = () => dispatch => {
-    // dispatch({
-    //     type: actionConstant,
-    //     data: data
-    // })
-    persistor.purge();
-  persistor.flush();
-
+export const logoutActionCreator = () => async (dispatch) => {
+  // dispatch({
+  //     type: actionConstant,
+  //     data: data
+  // })
+  await persistor.purge();
+  await persistor.flush();
+  // alert("Enterrrrrrr")
   // Create and dispatch the action which will cause redux-persist to purge
   dispatch({
     type: PURGE,
@@ -18,4 +18,5 @@ export const logoutActionCreator = () => dispatch => {
     result: () => null, // Func expected on the submitted action.
   });
   localStorage.clear();
+
 }

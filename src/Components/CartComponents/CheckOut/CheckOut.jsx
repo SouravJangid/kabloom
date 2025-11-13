@@ -17,6 +17,7 @@ import Scrollbar from "react-scrollbars-custom";
 import { Container, Row, Col } from 'reactstrap'
 import proImg from '../../../assets/images/party-can.png';
 import watermark from '../../../assets/images/watermark.jpg';
+import CartImage from '../../../assets/images/Cart_Image.png';
 import { createReqObjForCart } from "../../../Global/helper/commonUtil";
 import CartEmptyComponent from "../../CartHomeComponents/CartEmptyComponent";
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
@@ -353,7 +354,7 @@ class CheckOut extends React.Component {
                             </Col>
                             <Col lg={5} className="d-none d-lg-block">
                                 <div className="productImgSection">
-                                    <img src={watermark} alt="watermark" className="imgProduct img-responsive"></img>
+                                    <img src={CartImage} alt="watermark" className="imgProduct img-responsive"></img>
                                 </div>
                             </Col>
                         </Row>
@@ -441,7 +442,7 @@ class CheckOut extends React.Component {
                                 </div>
                             </div>
                             <div className="productImgSection proDetailSec" style={{ margin: '3rem auto 3rem auto'}}>
-                                <img src={watermark} alt="watermark" className="imgProduct img-responsive"></img>
+                                <img src={CartImage} alt="watermark" className="imgProduct img-responsive"></img>
                             </div>
                             
                         </Col>

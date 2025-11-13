@@ -1,5 +1,8 @@
 import { combineReducers } from 'redux';
 import ShowToast from './Reducers/toastReducer';
+// import { LOGOUT } from './Actions/logoutAction';
+import { PURGE } from 'redux-persist';
+
 /* COMMON Reducer*/
 import commonReducer from './Reducers/commonReducer';
 
@@ -63,6 +66,16 @@ let rootRducer = combineReducers({
     globalProductSearch,
     cartFlowDateTime,
     productDetailsRecommendation
-})
+});
 
-export default rootRducer;
+const appReducer = rootRducer;
+
+const rootReducer = (state, action) => {
+    if (action.type === "LOGOUT" || action.type === PURGE) {
+        // alert("Heloooooooooooo")
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
+
+export default rootReducer;

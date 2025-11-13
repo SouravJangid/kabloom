@@ -89,7 +89,6 @@ class StoreContainer extends React.Component {
 
     const { classes } = this.props;
     const topProducts = _get(this.state, "storeData.categories", [])
-    console.log("*****************topProducts",topProducts);
     
     const categoriesRenderComp = (x) => {
               const categoryName = x.categoryName;
@@ -106,7 +105,7 @@ class StoreContainer extends React.Component {
               });
 
               return (
-                <div className="mt-5">
+                <div key={`category-${categoryName}`} className="mt-5">
                   <h2>OUR TOP {categoryName}</h2>
                   <hr style={{ backgroundColor: "white" }}></hr>
                   <TopCategoryComponent
@@ -141,7 +140,11 @@ class StoreContainer extends React.Component {
                 />
               </div>
             )}
-            {topProducts.length>1 && topProducts.slice(1).map(categoriesRenderComp)}
+            {topProducts.length>1 && topProducts.slice(1).map((category, index) => (
+              <React.Fragment key={`category-${category.categoryName}-${index}`}>
+                {categoriesRenderComp(category)}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </React.Fragment>
