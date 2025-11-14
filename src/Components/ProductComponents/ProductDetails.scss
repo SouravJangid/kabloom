@@ -223,9 +223,9 @@
    }
 
    .option-grid {
-     display: grid;
-     grid-template-columns: repeat(auto-fit, minmax(100px, 130px));
-     gap: 0.75rem;
+     display: flex;
+     flex-wrap: wrap;
+     gap: 1em;
    }
 
    .option-card:not(.disabled):hover {
@@ -252,6 +252,8 @@
    }
 
    .option-card {
+     width: 5em;
+     height: 7em;
      border: 1.5px solid #ddd;
      border-radius: 8px;
      padding: 4px;
@@ -259,6 +261,11 @@
      background: #fff;
      cursor: pointer;
      transition: all 0.2s ease;
+   }
+
+   .size {
+     width: auto;
+     height: auto;
    }
 
    .option-card.selected {
@@ -285,13 +292,13 @@
 
    .option-img {
      width: 100%;
-     height: 8em;
+     height: 4em;
      border-radius: 6px;
      margin-bottom: 6px;
    }
 
    .option-card p {
-     font-size: 12px;
+     font-size: 0.5em;
      font-weight: bold;
      display: flex;
      justify-content: flex-start;
@@ -311,8 +318,11 @@
    }
 
    .size-label {
-     font-size: 15px;
-     font-weight: 600;
+     font-size: 1em;
+     font-weight: bold;
+     display: flex;
+     justify-content: flex-start;
+     margin: 0;
    }
 
    .size-info {
@@ -367,17 +377,18 @@
      }
 
      .price-int {
-       font-size: 2.6rem;
+       font-size: 1.6rem;
        font-weight: 700;
        line-height: 1;
 
-       .price-dec {
-         font-size: 1rem;
-         font-weight: 800;
-         position: relative;
-         top: -1.6em;
-         margin-left: 2px;
-       }
+     }
+
+     .price-dec {
+       font-size: 0.5em;
+       font-weight: 500;
+       position: relative;
+       top: -0.6em;
+       margin-left: 2px;
      }
 
      .per-count {
@@ -678,16 +689,18 @@
 
    .pdp-info .option-grid {
      display: flex;
+     flex-wrap: nowrap;
      flex-direction: row;
      overflow-x: auto;
      -webkit-overflow-scrolling: touch;
-     scrollbar-width: none;
+     //  scrollbar-width: none;
      padding-top: 0.5em;
+     gap: 0.5em;
    }
 
-   .pdp-info .option-grid::-webkit-scrollbar {
-     display: none;
-   }
+   //  .pdp-info .option-grid::-webkit-scrollbar {
+   //    display: none;
+   //  }
 
    .pdp-buy,
    .pdp-info {
