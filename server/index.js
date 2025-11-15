@@ -74,6 +74,40 @@ app.get("/connect/index/homepage", (req, res) => {
   });
 });
 
+app.post("/connect/index/checkDeliveryOptions", (req, res) => {
+  const { product_id, location_ids, zipcode } = req.query;
+
+  if (!product_id || !location_ids || !zipcode) {
+    console.warn("Missing required query params");
+    return res.status(400).json({
+      success: false,
+      message: "Missing required fields: product_id, location_ids, or zipcode",
+    });
+  }
+
+  // Build backend URL
+  const backendUrl = `${application_bff_url}/connect/index/checkDeliveryOptions?` +
+    new URLSearchParams({
+      product_id,
+      location_ids,
+      zipcode,
+      store_id: '1',
+    }).toString();
+
+
+  axios
+    .get(backendUrl)
+    .then((apiRespo) => {
+      res.json(apiRespo.data);
+    })
+    .catch((err) => {
+      console.error("Backend ERROR:", err.response?.data || err.message);
+      res
+        .status(err.response?.status || 500)
+        .json(err.response?.data || { success: false, message: "Backend error" });
+    });
+});
+
 app.post("/api/checkout/paymentmethods", (req, res) => {
   let p1 = axios.post(
     `${application_bff_url}/api/checkout/paymentmethods`,

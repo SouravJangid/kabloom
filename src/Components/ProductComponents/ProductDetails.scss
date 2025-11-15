@@ -5,6 +5,10 @@
    flex-direction: column;
  }
 
+ .stars.empty {
+   color: #ccc;
+ }
+
  .pdp-price {
    min-width: 123px;
    font-size: 20px;

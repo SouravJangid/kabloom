@@ -8,31 +8,34 @@
 // import NatureIcon from '@material-ui/icons/Nature';
 // import ShareIcon from '@material-ui/icons/Share';
 // import { connect } from 'react-redux';
-// import { map as _map, get as _get, isEmpty as _isEmpty, find as _find, reduce as _reduce } from 'lodash';
+// import {
+//     map as _map,
+//     get as _get,
+//     isEmpty as _isEmpty,
+//     find as _find,
+//     reduce as _reduce,
+//     filter as _filter,
+//     uniqBy as _uniqBy
+// } from 'lodash';
 // import { Container, Row, Col, Button } from 'reactstrap';
 // import ImageGallery from 'react-image-gallery';
 // import "react-image-gallery/styles/css/image-gallery.css";
-// import 'antd/dist/antd.css';
 // import CircularProgress from '@material-ui/core/CircularProgress';
 // import { isMobile } from 'react-device-detect';
 // import '../../App.css';
-
 // import genericGetData from "../../Redux/Actions/genericGetData";
 // import { genericPostData } from "../../Redux/Actions/genericPostData";
 // import { LoaderOverLay } from '../../Global/UIComponents/LoaderHoc';
-// import { commonActionCreater } from "../../Redux/Actions/commonAction";
-// import { cleanEntityData, deliveryMethods } from '../../Global/helper/commonUtil';
+// import { cleanEntityData } from '../../Global/helper/commonUtil';
 // import QuantitySelector from './QuantitySelector';
 // import ZipcodeInput from './ZipcodeInput';
 // import showMessage from '../../Redux/Actions/toastAction';
 // import { APPLICATION_BFF_URL } from '../../Redux/urlConstants';
 // import { ProductView, PageView, ProductAddedtoCart } from '../../Global/helper/react-ga';
-// import FrequentlyBought from './FrequentlyBought';
 // import ManufacturerInfo from './ManufacturerInfo';
 // import ProductCard from './ProductCard';
 // import ReviewsComponent from './ReviewsComponent';
 // import './ProductDetails.scss';
-// import data from './data/productData.json'; // ← MUST EXIST & VALID JSON
 
 // const ZIPCODE_LENGTH = 5;
 
@@ -59,36 +62,93 @@
 //         zipCodeMessage: '',
 //         addToCartLoading: false,
 //         productPrice: '',
+//         //
+//         deliveryOptions: {
+//             local: false,
+//             next_day: false,
+//             farm_direct: false,
+//             serviceable_zipcode: false
+//         },
+//         deliveryLoading: false,
 //     });
 
 //     const prevProductIdRef = useRef();
 //     const galleryRef = useRef(null);
 //     const [isShareClicked, setIsShareClicked] = useState(false);
 //     const [showCopiedLabel, setShowCopiedLabel] = useState(false);
-//     const [timeLeft, setTimeLeft] = useState({ hours: 1, minutes: 10, seconds: 0 });
 //     const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 992);
 
-//     // SAFE: Use _get to avoid crash if data.json is missing/malformed
-//     const rating = Number(_get(data, 'rating', 4.5)) || 4.5;
-//     const totalRatings = Number(_get(data, 'totalRatings', 0)) || 0;
-//     const boughtCount = String(_get(data, 'boughtCount', 0)) || 0;
+//     // ====================== VARIANTS LOGIC ======================
+//     const children = useMemo(() => {
+//         const products = _get(productDetailsData, 'variation_family.products', []);
+//         return Array.isArray(products) ? products : [];
+//     }, [productDetailsData]);
 
+//     const colorOptions = useMemo(() => _uniqBy(
+//         children.map(child => ({
+//             name: _get(child, 'color_theme', 'Unknown'),
+//             id: child.id,
+//             image: _get(child, 'image[0].small_image', ''),
+//         })), 'name'), [children]);
+
+//     const [selectedColor, setSelectedColor] = useState('');
+//     const [selectedSize, setSelectedSize] = useState('');
 //     const [selectedStyle, setSelectedStyle] = useState('');
-//     const extractColorFromParent = (parentName = '') => {
-//         const match = parentName.match(/(Yellow|Orange|White|Purple|Red|Pink|Assorted)/i);
-//         return match ? match[0].toLowerCase() : '';
-//     };
-//     const [selectedSize, setSelectedSize] = useState(12);
 
-//     // SAFE: Ensure children is always an array
-//     const children = Array.isArray(_get(productDetailsData, 'variation_family', []))
-//         ? _get(productDetailsData, 'variation_family', [])
-//         : [];
+//     const filteredByColor = useMemo(() =>
+//         selectedColor ? _filter(children, c => _get(c, 'color_theme') === selectedColor) : children,
+//         [children, selectedColor]
+//     );
 
-//     const fullStars = Math.floor(rating);
-//     const hasHalf = rating % 1 >= 0.5;
-//     const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+//     const sizeOptions = useMemo(() => _uniqBy(
+//         filteredByColor.map(c => ({ name: _get(c, 'size', 'N/A'), id: c.id })), 'name'),
+//         [filteredByColor]
+//     );
 
+//     const filteredBySize = useMemo(() =>
+//         selectedSize ? _filter(filteredByColor, c => String(_get(c, 'size')) === String(selectedSize)) : filteredByColor,
+//         [filteredByColor, selectedSize]
+//     );
+
+//     const styleOptions = useMemo(() => _uniqBy(
+//         filteredBySize.map(c => ({ name: _get(c, 'style', 'N/A'), id: c.id })), 'name'),
+//         [filteredBySize]
+//     );
+
+//     const selectedChild = useMemo(() => {
+//         return _find(children, c =>
+//             _get(c, 'color_theme') === selectedColor &&
+//             String(_get(c, 'size')) === String(selectedSize) &&
+//             _get(c, 'style') === selectedStyle
+//         ) || filteredBySize[0] || filteredByColor[0] || children[0] || {};
+//     }, [children, selectedColor, selectedSize, selectedStyle, filteredBySize, filteredByColor]);
+
+//     // Auto-select first variant
+//     useEffect(() => {
+//         if (children.length && !selectedColor) {
+//             const first = children[0];
+//             setSelectedColor(_get(first, 'color_theme'));
+//             setSelectedSize(_get(first, 'size'));
+//             setSelectedStyle(_get(first, 'style'));
+//         }
+//     }, [children, selectedColor]);
+
+//     useEffect(() => {
+//         if (selectedColor && filteredByColor.length) {
+//             const first = filteredByColor[0];
+//             setSelectedSize(_get(first, 'size'));
+//             setSelectedStyle(_get(first, 'style'));
+//         }
+//     }, [selectedColor, filteredByColor]);
+
+//     useEffect(() => {
+//         if (selectedSize && filteredBySize.length) {
+//             const first = filteredBySize[0];
+//             setSelectedStyle(_get(first, 'style'));
+//         }
+//     }, [selectedSize, filteredBySize]);
+
+//     // ====================== PRICE & SPEED ======================
 //     const pickDefaultSpeed = (speeds = []) => {
 //         const active = Array.isArray(speeds) ? speeds.filter(s => s.active) : [];
 //         const nextDay = active.find(s => s.Type?.toLowerCase() === 'next day');
@@ -96,240 +156,19 @@
 //         return nextDay || sameDay || active[0] || {};
 //     };
 
-//     const parentName = _get(productDetailsData, 'name', '');
-//     const parentColor = extractColorFromParent(parentName);
-
-//     const defaultChild = useMemo(() => {
-//         if (!parentColor || children.length === 0) return children[0] || {};
-//         const matched = children.find(c =>
-//             _get(c, 'color_theme', '').toLowerCase() === parentColor.toLowerCase()
-//         );
-//         return matched || children[0] || {};
-//     }, [children, parentColor]);
-
-//     const defaultColorId = _get(defaultChild, 'id');
-//     const [selectedColorId, setSelectedColorId] = useState(defaultColorId);
-
-//     const selectedChild = useMemo(() => {
-//         if (!selectedColorId) return defaultChild || {};
-//         const found = _find(children, { id: selectedColorId });
-//         return found || defaultChild || {};
-//     }, [selectedColorId, defaultChild, children]);
-
-//     const updateFooterButton = useCallback(() => {
-//         dispatch(
-//             commonActionCreater(
-//                 {
-//                     product_id: match.params.productID,
-//                     qty: state.defaultQuantity,
-//                     api_token: localStorage.getItem('Token'),
-//                     cart_id: localStorage.getItem('cart_id'),
-//                 },
-//                 'PRODUCT_DETAILS_FOOTER'
-//             )
-//         );
-//     }, [dispatch, match.params.productID, state.defaultQuantity]);
-
-//     const handleShare = useCallback(() => {
-//         const productUrl = `${window.location.origin}/store/${match.params.productID}`;
-//         setIsShareClicked(true);
-//         setTimeout(() => setIsShareClicked(false), 300);
-//         setShowCopiedLabel(true);
-//         const hideTimer = setTimeout(() => setShowCopiedLabel(false), 2000);
-
-//         navigator.clipboard.writeText(productUrl).catch(() => {
-//             const ta = document.createElement('textarea');
-//             ta.value = productUrl;
-//             document.body.appendChild(ta);
-//             ta.select();
-//             document.execCommand('copy');
-//             document.body.removeChild(ta);
-//         });
-
-//         return () => clearTimeout(hideTimer);
-//     }, [match.params.productID]);
-
-//     const fetchProduct = useCallback((productId) => {
-//         const loc_id = localStorage.getItem('vendor_location_id');
-//         const dineinTime = localStorage.getItem('dineinTime');
-//         const zipcode = localStorage.getItem('zipcode') || '';
-//         const couriertype = localStorage.getItem('couriertype') || '';
-
-//         setState(prev => ({ ...prev, isLoading: true }));
-
-//         genericGetData({
-//             dispatch,
-//             url: `/connect/index/product?prodid=37529&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zipcode}&courier_type=${couriertype}`,
-//             constants: {
-//                 init: "PRODUCT_DETAILS_LIST_INIT",
-//                 success: "PRODUCT_DETAILS_LIST_SUCCESS",
-//                 error: "PRODUCT_DETAILS_LIST_ERROR",
-//             },
-//             identifier: "PRODUCT_DETAILS_LIST",
-//             successCb: (data) => {
-//                 const map = {};
-//                 _get(data, 'variation_family', []).forEach(c => {
-//                     const size = String(_get(c, 'bottle_size', '')).toLowerCase();
-//                     _get(c, 'speed_id', []).forEach(s => {
-//                         const speed = String(_get(s, 'Type', '')).toLowerCase();
-//                         const key = `${size}_${speed}`;
-//                         map[key] = {
-//                             price: _get(s, 'Price', _get(c, 'price')),
-//                             vendorId: _get(s, 'Vendor_id'),
-//                             vendorName: _get(s, 'Vendor_name'),
-//                             locId: _get(s, 'Loc_id'),
-//                             active: _get(s, 'active', true),
-//                         };
-//                     });
-//                 });
-
-//                 const child = defaultChild || {};
-//                 const speedObj = pickDefaultSpeed(_get(child, 'speed_id', []));
-//                 const basePrice = _get(speedObj, 'price', _get(child, 'price', 0));
-//                 const total = (1 * parseFloat(basePrice || 0)).toFixed(2);
-
-//                 setState(prev => ({
-//                     ...prev,
-//                     isLoading: false,
-//                     productDetailMap: map,
-//                     size: _get(child, 'bottle_size'),
-//                     productID: _get(child, 'id'),
-//                     price: basePrice,
-//                     productPrice: total,
-//                     selectedSpeed: _get(speedObj, 'Type', ''),
-//                     speedDropdown: _map(_get(child, 'speed_id', []), s => ({
-//                         value: _get(s, 'Type'),
-//                         price: _get(s, 'Price'),
-//                         active: _get(s, 'active', true),
-//                         vendorId: _get(s, 'Vendor_id'),
-//                         vendorName: _get(s, 'Vendor_name'),
-//                     })),
-//                     vendorData: {
-//                         id: _get(speedObj, 'Vendor_id'),
-//                         name: _get(speedObj, 'Vendor_name')
-//                     },
-//                 }));
-//                 setSelectedColorId(_get(child, 'id'));
-//                 setSelectedSize(_get(child, 'bottle_size'));
-//                 setSelectedStyle(_get(child, 'style'));
-
-//                 ProductView(cleanEntityData({
-//                     productId,
-//                     name: _get(child, 'name'),
-//                     price: basePrice
-//                 }));
-//                 PageView();
-//             },
-//             errorCb: () => setState(prev => ({ ...prev, isLoading: false })),
-//             dontShowMessage: true,
-//         });
-//     }, [dispatch, defaultChild]);
-
 //     useEffect(() => {
-//         if (children.length > 0 && !selectedColorId) {
-//             const child = defaultChild || {};
-//             setSelectedColorId(_get(child, 'id'));
-//             setSelectedSize(_get(child, 'bottle_size'));
-//             setSelectedStyle(_get(child, 'style'));
-//         }
-//     }, [children, defaultChild, selectedColorId]);
-
-//     useEffect(() => {
-//         const handleResize = () => setIsLargeScreen(window.innerWidth >= 992);
-//         window.addEventListener('resize', handleResize);
-//         return () => window.removeEventListener('resize', handleResize);
-//     }, []);
-//     useEffect(() => {
-//         const currentId = match.params.productID;
-//         if (prevProductIdRef.current !== currentId && currentId) {
-//             prevProductIdRef.current = currentId;
-//             fetchProduct(currentId);
-//         }
-//     }, [match.params.productID, fetchProduct]);
-
-//     useEffect(() => {
-//         const timer = setInterval(() => {
-//             setTimeLeft(prev => {
-//                 let { hours, minutes, seconds } = prev;
-//                 if (seconds > 0) seconds--;
-//                 else if (minutes > 0) { minutes--; seconds = 59; }
-//                 else if (hours > 0) { hours--; minutes = 59; seconds = 59; }
-//                 else { clearInterval(timer); return prev; }
-//                 return { hours, minutes, seconds };
-//             });
-//         }, 1000);
-//         return () => clearInterval(timer);
-//     }, []);
-
-//     useEffect(() => {
-//         const savedZip = localStorage.getItem('zipcode');
-//         if (savedZip && savedZip.length === ZIPCODE_LENGTH) {
-//             setState(prev => ({
-//                 ...prev,
-//                 zipcode: savedZip,
-//                 zipcodeVerified: true,
-//                 zipCodeMessage: '',
-//             }));
-//         }
-//     }, []);
-
-//     const formatTime = (num) => String(num).padStart(2, '0');
-
-//     const onQuantityChange = useCallback((qty) => {
-//         setState(prev => {
-//             const basePrice = prev.productDetailMap[`${prev.size?.toLowerCase()}_${prev.selectedSpeed?.toLowerCase()}`]?.price || 0;
-//             const total = (qty * parseFloat(basePrice || 0)).toFixed(2);
-//             return { ...prev, defaultQuantity: qty, productPrice: total };
-//         });
-//         updateFooterButton();
-//     }, [updateFooterButton]);
-
-//     const onSpeedChange = useCallback((speedType) => {
-//         const speedObj = _find(_get(selectedChild, 'speed_id', []), { Type: speedType });
-//         if (!speedObj) return;
+//         const speedObj = pickDefaultSpeed(_get(selectedChild, 'speed_id', []));
 //         const basePrice = _get(speedObj, 'Price', _get(selectedChild, 'price', 0));
 //         const total = (state.defaultQuantity * parseFloat(basePrice || 0)).toFixed(2);
-//         const mapKey = `${_get(selectedChild, 'bottle_size', '').toLowerCase()}_${speedType.toLowerCase()}`;
-//         const newMap = {
-//             ...state.productDetailMap,
-//             [mapKey]: {
-//                 price: basePrice,
-//                 vendorId: _get(speedObj, 'Vendor_id'),
-//                 vendorName: _get(speedObj, 'Vendor_name'),
-//                 locId: _get(speedObj, 'Loc_id'),
-//                 active: _get(speedObj, 'active', true),
-//             },
-//         };
 
 //         setState(prev => ({
 //             ...prev,
-//             selectedSpeed: speedType,
-//             price: basePrice,
-//             productPrice: total,
-//             productDetailMap: newMap,
-//             vendorData: {
-//                 id: _get(speedObj, 'Vendor_id'),
-//                 name: _get(speedObj, 'Vendor_name'),
-//             },
-//         }));
-//     }, [selectedChild, state.defaultQuantity, state.productDetailMap]);
-
-//     const onColorChange = useCallback((childId) => {
-//         const child = _find(children, { id: childId });
-//         if (!child) return;
-
-//         const speedObj = pickDefaultSpeed(_get(child, 'speed_id', []));
-//         const basePrice = _get(speedObj, 'price', _get(child, 'price', 0));
-//         const total = (state.defaultQuantity * parseFloat(basePrice || 0)).toFixed(2);
-
-//         setState(prev => ({
-//             ...prev,
-//             size: _get(child, 'bottle_size'),
-//             productID: _get(child, 'id'),
+//             size: _get(selectedChild, 'size'),
+//             productID: _get(selectedChild, 'id'),
 //             price: basePrice,
 //             productPrice: total,
 //             selectedSpeed: _get(speedObj, 'Type', ''),
-//             speedDropdown: _map(_get(child, 'speed_id', []), s => ({
+//             speedDropdown: _map(_get(selectedChild, 'speed_id', []), s => ({
 //                 value: _get(s, 'Type'),
 //                 price: _get(s, 'Price'),
 //                 active: _get(s, 'active', true),
@@ -341,102 +180,266 @@
 //                 name: _get(speedObj, 'Vendor_name')
 //             },
 //         }));
+//     }, [selectedChild, state.defaultQuantity]);
 
-//         onSpeedChange(_get(speedObj, 'Type', ''));
-//         setSelectedColorId(childId);
-//         setSelectedSize(_get(child, 'bottle_size'));
-//         setSelectedStyle(_get(child, 'style'));
-//     }, [children, onSpeedChange, state.defaultQuantity]);
+//     // ====================== SHARE ======================
+//     const handleShare = useCallback(() => {
+//         const productUrl = `${window.location.origin}/store/${match.params.productID}`;
+//         setIsShareClicked(true);
+//         setTimeout(() => setIsShareClicked(false), 300);
+//         setShowCopiedLabel(true);
+//         setTimeout(() => setShowCopiedLabel(false), 2000);
+//         navigator.clipboard.writeText(productUrl).catch(() => {
+//             const ta = document.createElement('textarea');
+//             ta.value = productUrl;
+//             document.body.appendChild(ta);
+//             ta.select();
+//             document.execCommand('copy');
+//             document.body.removeChild(ta);
+//         });
+//     }, [match.params.productID]);
 
-//     const onZipLookup = useCallback((zip) => {
-//         if (!zip || zip.length !== ZIPCODE_LENGTH) {
+//     // ====================== FETCH PRODUCT ======================
+//     const fetchProduct = useCallback((productId) => {
+//         const loc_id = localStorage.getItem('vendor_location_id') || '';
+//         const dineinTime = localStorage.getItem('dineinTime') || '';
+//         const zipcode = localStorage.getItem('zipcode') || '';
+//         const couriertype = localStorage.getItem('couriertype') || '';
+
+//         setState(prev => ({ ...prev, isLoading: true }));
+//         genericGetData({
+//             dispatch,
+//             url: `/connect/index/product?prodid=37529&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zipcode}&courier_type=${couriertype}`,
+//             constants: {
+//                 init: "PRODUCT_DETAILS_LIST_INIT",
+//                 success: "PRODUCT_DETAILS_LIST_SUCCESS",
+//                 error: "PRODUCT_DETAILS_LIST_ERROR",
+//             },
+//             identifier: "PRODUCT_DETAILS_LIST",
+//             successCb: () => {
+//                 setState(prev => ({ ...prev, isLoading: false }));
+//                 ProductView(cleanEntityData({
+//                     productId,
+//                     name: _get(selectedChild, 'name'),
+//                     price: state.price
+//                 }));
+//                 PageView();
+//             },
+//             errorCb: () => setState(prev => ({ ...prev, isLoading: false })),
+//             dontShowMessage: true,
+//         });
+//     }, [dispatch, selectedChild, state.price]);
+
+//     useEffect(() => {
+//         const currentId = match.params.productID;
+//         if (prevProductIdRef.current !== currentId && currentId) {
+//             prevProductIdRef.current = currentId;
+//             fetchProduct(currentId);
+//         }
+//     }, [match.params.productID, fetchProduct]);
+
+//     // ====================== ZIPCODE & DELIVERY CHECK ======================
+//     const checkDeliveryOptions = useCallback((zipcode) => {
+//         if (!zipcode || zipcode.length !== ZIPCODE_LENGTH) {
 //             dispatch(showMessage({ text: `Enter a ${ZIPCODE_LENGTH}-digit zipcode`, isSuccess: false }));
 //             return;
 //         }
 
-//         setState(prev => ({ ...prev, zipcodeLoading: true, zipcodeVerified: false, zipCodeMessage: '' }));
-//         const productID = match.params.productID;
-//         const loc_id = localStorage.getItem('vendor_location_id');
-//         const dineinTime = localStorage.getItem('dineinTime');
-//         const couriertype = localStorage.getItem('couriertype') || '';
+//         if (!selectedChild.id) {
+//             setState(prev => ({ ...prev, zipCodeMessage: 'Product not loaded yet' }));
+//             return;
+//         }
 
-//         fetch(`${APPLICATION_BFF_URL}/connect/index/product?prodid=37529&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zip}&courier_type=${couriertype}`)
-//             .then(r => r.json())
-//             .then(data => {
-//                 setState(prev => ({ ...prev, zipcodeLoading: false }));
-//                 if (data?.errorCode === 1) {
-//                     setState(prev => ({ ...prev, zipcodeVerified: false, zipCodeMessage: data?.message || 'Invalid zipcode' }));
-//                     return;
-//                 }
-//                 localStorage.setItem('zipcode', zip);
-//                 setState(prev => ({ ...prev, zipcode: zip, zipcodeVerified: true, zipCodeMessage: '' }));
+//         const loc_id = localStorage.getItem('vendor_location_id') || '';
+//         if (!loc_id) {
+//             setState(prev => ({ ...prev, zipCodeMessage: 'Location not available' }));
+//             return;
+//         }
 
-//                 const map = {};
-//                 _get(data, 'variation_family', []).forEach(c => {
-//                     const size = String(_get(c, 'bottle_size', '')).toLowerCase();
-//                     _get(c, 'speed_id', []).forEach(s => {
-//                         const speed = String(_get(s, 'Type', '')).toLowerCase();
-//                         const key = `${size}_${speed}`;
-//                         map[key] = {
-//                             price: _get(s, 'Price', _get(c, 'price')),
-//                             vendorId: _get(s, 'Vendor_id'),
-//                             vendorName: _get(s, 'Vendor_name'),
-//                             locId: _get(s, 'Loc_id'),
-//                             active: _get(s, 'active', true),
-//                         };
-//                     });
-//                 });
-//                 const firstChild = _get(data, 'child[0]', {});
-//                 const firstSize = _get(firstChild, 'bottle_size');
-//                 const speeds = _map(_get(firstChild, 'speed_id', []), s => ({
-//                     value: _get(s, 'Type'),
-//                     price: _get(s, 'Price'),
-//                     active: _get(s, 'active', true),
-//                     vendorId: _get(s, 'Vendor_id'),
-//                     vendorName: _get(s, 'Vendor_name'),
-//                 }));
-//                 const activeSpeeds = speeds.filter(s => s.active);
-//                 const courierOption = activeSpeeds.find(s => s.value?.toLowerCase() === 'courier');
-//                 const defaultSpeedObj = courierOption || activeSpeeds[0] || {};
-//                 const basePrice = _get(defaultSpeedObj, 'price', 0);
-//                 const total = (state.defaultQuantity * parseFloat(basePrice || 0)).toFixed(2);
+//         setState(prev => ({
+//             ...prev,
+//             deliveryLoading: true,
+//             zipcodeVerified: false,
+//             zipCodeMessage: '',
+//         }));
+
+//         const queryParams = new URLSearchParams({
+//             product_id: selectedChild.id,
+//             location_ids: loc_id,
+//             zipcode,
+//             store_id: '1',
+//         }).toString();
+
+//         genericPostData({
+//             dispatch,
+//             reqObj: {},
+//             url: `/connect/index/checkDeliveryOptions?${queryParams}`,
+//             constants: { init: 'CHECK_DELIVERY_INIT', success: 'CHECK_DELIVERY_SUCCESS', error: 'CHECK_DELIVERY_ERROR' },
+//             identifier: 'CHECK_DELIVERY',
+//             dontShowMessage: true,
+//             successCb: (responseArray) => {
+//                 const response = Array.isArray(responseArray) ? responseArray[0] : responseArray;
+//                 const data = response?.data || {};
+//                 const serviceable = !!data.serviceable_zipcode;
 
 //                 setState(prev => ({
 //                     ...prev,
-//                     productDetailMap: map,
-//                     size: firstSize,
-//                     productID: _get(firstChild, 'id'),
-//                     price: basePrice,
-//                     productPrice: total,
-//                     selectedSpeed: _get(defaultSpeedObj, 'value', ''),
-//                     speedDropdown: speeds,
-//                     vendorData: { id: _get(defaultSpeedObj, 'vendorId'), name: _get(defaultSpeedObj, 'vendorName') },
+//                     deliveryLoading: false,
+//                     zipcodeVerified: serviceable,
+//                     zipCodeMessage: serviceable ? '' : (response.message || 'Delivery not available'),
+//                     deliveryOptions: {
+//                         local: !!data.local,
+//                         next_day: !!data.next_day,
+//                         farm_direct: !!data.farm_direct,
+//                         serviceable_zipcode: serviceable,
+//                     },
+//                     zipcode,
 //                 }));
-//                 dispatch({ type: 'PRODUCT_DETAILS_LIST_SUCCESS', data, receivedAt: Date.now() });
-//             })
-//             .catch(() => setState(prev => ({ ...prev, zipcodeLoading: false })));
-//     }, [dispatch, match.params.productID, state.defaultQuantity]);
 
+//                 if (serviceable) {
+//                     localStorage.setItem('zipcode', zipcode);
+//                 }
+//             },
+//             errorCb: (err) => {
+//                 setState(prev => ({
+//                     ...prev,
+//                     deliveryLoading: false,
+//                     zipcodeVerified: false,
+//                     zipCodeMessage: err?.message || 'Network error',
+//                 }));
+//             },
+//         });
+//     }, [dispatch, selectedChild.id]); // ← Now safe
+
+
+
+//     useEffect(() => {
+//         const savedZip = localStorage.getItem('zipcode');
+//         if (savedZip && savedZip.length === ZIPCODE_LENGTH && selectedChild.id && !state.zipcodeVerified) {
+
+//             const timer = setTimeout(() => checkDeliveryOptions(savedZip), 300);
+//             return () => clearTimeout(timer);
+//         }
+//     }, [selectedChild.id, state.zipcodeVerified, checkDeliveryOptions]);
+
+//     // Save vendor_location_id
+//     useEffect(() => {
+//         const productLocId = _get(selectedChild, 'location_id');
+//         const speedLocId = _get(pickDefaultSpeed(_get(selectedChild, 'speed_id', [])), 'Loc_id');
+//         const finalLocId = speedLocId || productLocId;
+//         if (finalLocId) localStorage.setItem('vendor_location_id', finalLocId);
+//     }, [selectedChild]);
+
+//     // ====================== HANDLERS ======================
+//     const onQuantityChange = useCallback((qty) => {
+//         const numQty = Number(qty) || 1;
+//         setState(prev => ({
+//             ...prev,
+//             defaultQuantity: numQty,
+//             productPrice: (numQty * parseFloat(prev.price || 0)).toFixed(2)
+//         }));
+//     }, []);
+//     const onSpeedChange = useCallback((speedType) => {
+//         const speedObj = _find(_get(selectedChild, 'speed_id', []), { Type: speedType });
+//         if (!speedObj) return;
+//         const basePrice = _get(speedObj, 'Price', _get(selectedChild, 'price', 0));
+//         const total = (state.defaultQuantity * parseFloat(basePrice || 0)).toFixed(2);
+//         setState(prev => ({
+//             ...prev,
+//             selectedSpeed: speedType,
+//             price: basePrice,
+//             productPrice: total,
+//             vendorData: { id: _get(speedObj, 'Vendor_id'), name: _get(speedObj, 'Vendor_name') },
+//         }));
+//     }, [selectedChild, state.defaultQuantity]);
+
+//     // const onAddToCart = useCallback(() => {
+//     //     if (!state.zipcodeVerified) {
+//     //         dispatch(showMessage({ text: 'Please verify zipcode first', isSuccess: false }));
+//     //         return;
+//     //     }
+
+//     //     const mapKey = `${state.size?.toLowerCase()}_${state.selectedSpeed?.toLowerCase()}`;
+//     //     const locId = state.vendorData.id ||
+//     //         state.productDetailMap[mapKey]?.locId ||
+//     //         localStorage.getItem('vendor_location_id') ||
+//     //         '7224';
+
+//     //     const req = {
+//     //         product_id: selectedChild.id,
+//     //         qty: Number(state.defaultQuantity),
+//     //         api_token: localStorage.getItem('token') || '',
+//     //         cart_id: localStorage.getItem('cart_id') || '',
+//     //         zipcode: localStorage.getItem('zipcode'),
+//     //         loc_id: locId,
+//     //         wallet: 0,
+//     //         speed_id: state.selectedSpeed,
+//     //         store_id: 1
+//     //     };
+
+//     //     console.log('Add to Cart Request:', req); // ← Remove in prod
+
+//     //     setState(prev => ({ ...prev, addToCartLoading: true }));
+
+//     //     genericPostData({
+//     //         dispatch,
+//     //         reqObj: req,
+//     //         url: `/api/cart/addtocart`,
+//     //         constants: { init: 'ADD_TO_CART_INIT', success: 'ADD_TO_CART_SUCCESS', error: 'ADD_TO_CART_ERROR' },
+//     //         identifier: 'ADD_TO_CART',
+//     //         successCb: ([{ code, message, cart_id, total_products_in_cart }]) => {
+//     //             setState(prev => ({ ...prev, addToCartLoading: false }));
+//     //             if (code === 1) {
+//     //                 ProductAddedtoCart(cleanEntityData({
+//     //                     productId: match.params.productID,
+//     //                     name: _get(selectedChild, 'name'),
+//     //                     price: state.price,
+//     //                     quantity: state.defaultQuantity,
+//     //                 }));
+//     //                 localStorage.setItem('cart_id', cart_id);
+//     //                 localStorage.setItem('total_products_in_cart', total_products_in_cart);
+//     //                 if (_isEmpty(_get(userSignInInfo, '[0].result.api_token', ''))) {
+//     //                     history.push('/guest/register');
+//     //                 } else {
+//     //                     history.push('/cart');
+//     //                 }
+//     //             } else {
+//     //                 dispatch(showMessage({ text: message, isSuccess: false }));
+//     //             }
+//     //         },
+//     //         errorCb: () => setState(prev => ({ ...prev, addToCartLoading: false })),
+//     //         dontShowMessage: true,
+//     //     });
+//     // }, [
+//     //     dispatch, history, match.params.productID, selectedChild,
+//     //     state.defaultQuantity, state.price, state.selectedSpeed, state.size,
+//     //     state.zipcodeVerified, state.vendorData.id, state.productDetailMap,
+//     //     userSignInInfo
+//     // ]);
 //     const onAddToCart = useCallback(() => {
-//         if (!localStorage.getItem('zipcode')) {
+//         if (!state.zipcodeVerified) {
 //             dispatch(showMessage({ text: 'Please verify zipcode first', isSuccess: false }));
 //             return;
 //         }
 
-//         const locId = state.productDetailMap[`${state.size?.toLowerCase()}_${state.selectedSpeed?.toLowerCase()}`]?.locId;
+//         const locId = state.vendorData.id || localStorage.getItem('vendor_location_id') || '';
 
 //         const req = {
 //             product_id: selectedChild.id,
-//             qty: state.defaultQuantity,
-//             api_token: localStorage.getItem('Token'),
-//             cart_id: localStorage.getItem('cart_id'),
+//             qty: Number(state.defaultQuantity) || 1, // ← FIXED: Convert to number
+//             api_token: localStorage.getItem('token') || '', // ← FIXED: lowercase 'token'
+//             cart_id: localStorage.getItem('cart_id') || '',
 //             zipcode: localStorage.getItem('zipcode'),
 //             loc_id: locId,
 //             wallet: 0,
 //             speed_id: state.selectedSpeed,
+//             store_id: 1 // ← Add store_id if backend expects it
 //         };
 
+//         console.log('Add to Cart Request:', req); // ← Remove in production
+
 //         setState(prev => ({ ...prev, addToCartLoading: true }));
+
 //         genericPostData({
 //             dispatch,
 //             reqObj: req,
@@ -449,13 +452,14 @@
 //                     ProductAddedtoCart(
 //                         cleanEntityData({
 //                             productId: match.params.productID,
-//                             name: _get(productDetailsData, 'name'),
-//                             price: _get(productDetailsData, 'price'),
-//                             quantity: state.defaultQuantity,
+//                             name: _get(selectedChild, 'name'),
+//                             price: state.price,
+//                             quantity: Number(state.defaultQuantity),
 //                         })
 //                     );
 //                     localStorage.setItem('cart_id', cart_id);
 //                     localStorage.setItem('total_products_in_cart', total_products_in_cart);
+
 //                     if (_isEmpty(_get(userSignInInfo, '[0].result.api_token', ''))) {
 //                         history.push('/guest/register');
 //                     } else {
@@ -465,68 +469,55 @@
 //                     dispatch(showMessage({ text: message, isSuccess: false }));
 //                 }
 //             },
-//             errorCb: () => setState(prev => ({ ...prev, addToCartLoading: false })),
+//             errorCb: (err) => {
+//                 setState(prev => ({ ...prev, addToCartLoading: false }));
+//                 dispatch(showMessage({
+//                     text: err?.message || 'Failed to add to cart',
+//                     isSuccess: false
+//                 }));
+//             },
 //             dontShowMessage: true,
 //         });
-//     }, [dispatch, history, match.params.productID, productDetailsData, selectedChild.id, state.defaultQuantity, state.productDetailMap, state.selectedSpeed, state.size, userSignInInfo]);
+//     }, [
+//         dispatch,
+//         history,
+//         match.params.productID,
+//         selectedChild,
+//         state.defaultQuantity,
+//         state.price,
+//         state.selectedSpeed,
+//         state.zipcodeVerified,
+//         state.vendorData.id,
+//         userSignInInfo
+//     ]);
 
-//     const imageArr = useMemo(() => {
-//         return _reduce(_get(selectedChild, 'image', []), (acc, im) => {
-//             if (im && im.hasOwnProperty('small_image')) acc.push(_get(im, 'small_image', ''));
-//             else if (im && im.hasOwnProperty('additional_images')) {
-//                 _map(_get(im, 'additional_images', []), a => acc.push(_get(a, 'additional_image', '')));
-//             }
-//             return acc;
-//         }, []);
-//     }, [selectedChild]);
+//     // ====================== GALLERY ======================
+//     const imageArr = useMemo(() => _reduce(_get(selectedChild, 'image', []), (acc, im) => {
+//         if (im?.small_image) acc.push(im.small_image);
+//         else if (im?.additional_images) {
+//             _map(im.additional_images, a => a?.additional_image && acc.push(a.additional_image));
+//         }
+//         return acc;
+//     }, []), [selectedChild]);
 
-//     const galleryItems = useMemo(() => {
-//         return _map(imageArr, (url, i) => {
-//             if (!url) return null;
-//             let thumbnail = url;
-//             const separator = url.includes('?') ? '&' : '?';
-//             thumbnail = `${url}${separator}width=100&height=100&quality=80`;
-//             return {
-//                 original: url,
-//                 thumbnail,
-//                 originalAlt: `Product image ${i + 1}`,
-//                 thumbnailAlt: `Thumbnail ${i + 1}`,
-//             };
-//         }).filter(Boolean);
-//     }, [imageArr]);
+//     const galleryItems = useMemo(() => _map(imageArr, (url, i) => {
+//         if (!url) return null;
+//         const separator = url.includes('?') ? '&' : '?';
+//         const thumbnail = `${url}${separator}width=100&height=100&quality=80`;
+//         return { original: url, thumbnail, originalAlt: `Product ${i + 1}`, thumbnailAlt: `Thumb ${i + 1}` };
+//     }).filter(Boolean), [imageArr]);
 
-//     const handleSlide = useCallback((index) => {
-//         // No-op
-//     }, []);
-
-//     const renderCustomItem = (item) => (
-//         <div className="image-gallery-image">
-//             <img
-//                 src={item.original || ''}
-//                 alt={item.originalAlt}
-//                 loading="lazy"
-//                 style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
-//             />
-//         </div>
-//     );
-
-//     const safeGet = (obj, path) => {
-//         const value = _get(obj, path, null);
-//         return value === null || value === undefined || value === "" ? "N/A" : value;
+//     const safeGet = (obj, path, fallback = 'N/A') => {
+//         const v = _get(obj, path);
+//         return v === null || v === undefined || v === '' ? fallback : v;
 //     };
 
 //     const inStock = _get(selectedChild, 'stock_availability', '').toLowerCase() === 'in stock';
-//     const zipVerified = state.zipcodeVerified && !!localStorage.getItem('zipcode');
+//     const zipVerified = state.zipcodeVerified;
 
-//     // console.log('productDetailsData:', productDetailsData);
-//     // console.log('children:', children);
-//     // console.log('selectedChild:', selectedChild);
-//     // console.log('galleryItems:', galleryItems);
-
+//     // ====================== RENDER ======================
 //     if (state.isLoading) return <LoaderOverLay />;
-
-//     // Fallback if no product
-//     if (_isEmpty(productDetailsData) && !state.isLoading) {
+//     if (_isEmpty(productDetailsData)) {
 //         return <div style={{ padding: '2rem', textAlign: 'center' }}>Product not found</div>;
 //     }
 
@@ -534,16 +525,12 @@
 //         <div className="page-content-container">
 //             <Container fluid className="productDetails">
 //                 <Row className="no-gutters justify-content-lg-between secMinHeight w-100 main-conainer">
-//                     <Col
-//                         lg="4"
-//                         className={`pdp-image-galary ${isLargeScreen ? 'sticky-left' : ''}`}
-//                     >
-//                         <div className="proName top">
-//                             {safeGet(selectedChild, 'name')}
-//                         </div>
+//                     {/* IMAGE GALLERY */}
+//                     <Col lg="4" className={`pdp-image-galary ${isLargeScreen ? 'sticky-left' : ''}`}>
+//                         <div className="proName top">{safeGet(selectedChild, 'name')}</div>
 //                         <div className="productImgSection proDetailSec">
 //                             <ImageGallery
-//                                 key={selectedColorId}
+//                                 key={selectedChild.id}
 //                                 ref={galleryRef}
 //                                 items={galleryItems}
 //                                 thumbnailPosition="left"
@@ -554,297 +541,239 @@
 //                                 lazyLoad={true}
 //                                 infinite={false}
 //                                 useBrowserFullscreen={true}
-//                                 onSlide={handleSlide}
-//                                 renderItem={renderCustomItem}
-//                                 disableThumbnailScroll={false}
-//                             />
-//                             <Button
-//                                 className={`shareBtn ${isShareClicked ? 'clicked' : ''}`}
-//                                 onClick={handleShare}
-//                                 title="Copy product link"
-//                             >
-//                                 <ShareIcon />
-//                                 {showCopiedLabel && (
-//                                     <div className="share-copied-label">
-//                                         Link copied!
+//                                 renderItem={(item) => (
+//                                     <div className="image-gallery-image">
+//                                         <img src={item.original} alt={item.originalAlt} loading="lazy"
+//                                             style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
 //                                     </div>
 //                                 )}
+//                             />
+//                             <Button className={`shareBtn ${isShareClicked ? 'clicked' : ''}`} onClick={handleShare}>
+//                                 <ShareIcon />
+//                                 {showCopiedLabel && <div className="share-copied-label">Link copied!</div>}
 //                             </Button>
 //                         </div>
 //                     </Col>
 
+//                     {/* PRODUCT INFO */}
 //                     <Col className="pdp-info">
 //                         <div className="w-100">
-//                             <div className="proName mid">
-//                                 {safeGet(selectedChild, 'name')}
-//                             </div>
+//                             <div className="proName mid">{safeGet(selectedChild, 'name')}</div>
+
+//                             {/* RATING */}
 //                             <div className="rating-summary">
 //                                 <div className="rating-stars">
-//                                     <span className="rating-value">{rating.toFixed(1)}</span>
-
-//                                     {[...Array(fullStars)].map((_, i) => (
-//                                         <StarIcon key={`full-${i}`} className="star full" />
-//                                     ))}
-//                                     {hasHalf && <StarHalfIcon className="star half" />}
-//                                     {[...Array(emptyStars)].map((_, i) => (
-//                                         <StarBorderIcon key={`empty-${i}`} className="star empty" />
-//                                     ))}
-
+//                                     <span className="rating-value">
+//                                         {(() => {
+//                                             const r = parseFloat(_get(selectedChild, 'reviews.rating_summary', 0)) || 0;
+//                                             return r > 0 ? (r / 20).toFixed(1) : '0.0';
+//                                         })()}
+//                                     </span>
+//                                     {(() => {
+//                                         const r = parseFloat(_get(selectedChild, 'reviews.rating_summary', 0)) || 0;
+//                                         const full = Math.floor(r / 20);
+//                                         return [...Array(full)].map((_, i) => <StarIcon key={i} className="star full" />);
+//                                     })()}
+//                                     {(() => {
+//                                         const r = parseFloat(_get(selectedChild, 'reviews.rating_summary', 0)) || 0;
+//                                         return r % 20 >= 10 ? <StarHalfIcon className="star half" /> : null;
+//                                     })()}
+//                                     {(() => {
+//                                         const r = parseFloat(_get(selectedChild, 'reviews.rating_summary', 0)) || 0;
+//                                         const full = Math.floor(r / 20);
+//                                         const hasHalf = r % 20 >= 10;
+//                                         const empty = 5 - full - (hasHalf ? 1 : 0);
+//                                         return [...Array(empty)].map((_, i) => <StarBorderIcon key={i} className="star empty" />);
+//                                     })()}
 //                                     <ExpandMoreIcon className="dropdown-icon" />
-//                                     <span className="rating-count">{totalRatings} ratings</span>
+//                                     <span className="rating-count">
+//                                         {_get(selectedChild, 'reviews.review_count', '0 Reviews').replace(' Reviews', '')} ratings
+//                                     </span>
 //                                 </div>
-
-//                                 <div className="bought-info">
-//                                     <strong>{boughtCount} bought</strong> in past month
-//                                 </div>
+//                                 <div className="bought-info"><strong>50 bought</strong> in past month</div>
 //                             </div>
+
 //                             <div className="pdpFormSection">
+//                                 {/* PRICE */}
 //                                 <div className="price-section">
 //                                     <span className="main-price">
-//                                         {_get(selectedChild, "price") || state.price ? (
-//                                             <>
-//                                                 <span className="currency">$</span>
-//                                                 <span className="price-int">
-//                                                     {Math.floor(parseFloat(_get(selectedChild, "price") || state.price || 0))}
-//                                                     <sup className="price-dec">
-//                                                         {((parseFloat(_get(selectedChild, "price") || state.price || 0) % 1)
-//                                                             .toFixed(2)
-//                                                             .split(".")[1])}
-//                                                     </sup>
-//                                                 </span>
-//                                                 <span className="per-count">
-//                                                     (${parseFloat(_get(selectedChild, "price") || state.price || 0).toFixed(2)}/count)
-//                                                 </span>
-//                                             </>
-//                                         ) : (
-//                                             <span className="price-na">N/A</span>
-//                                         )}
+//                                         <span className="currency">$</span>
+//                                         <span className="price-int">{Math.floor(parseFloat(state.price || 0))}</span>
+//                                         <sup className="price-dec">{(parseFloat(state.price || 0) % 1).toFixed(2).split('.')[1]}</sup>
+//                                         <span className="per-count">(${parseFloat(state.price || 0).toFixed(2)}/count)</span>
 //                                     </span>
 //                                 </div>
 //                                 <hr />
-//                                 <div className="product-options">
-//                                     <div className="option-section">
-//                                         <h4>Color <span className="selected">{safeGet(selectedChild, 'color_theme')}</span></h4>
-//                                         <div className="option-grid">
-//                                             {children.map(child => (
-//                                                 <div
-//                                                     key={child.id}
-//                                                     className={`option-card ${selectedColorId === child.id ? 'selected' : ''}`}
-//                                                     onClick={() => onColorChange(child.id)}
-//                                                 >
-//                                                     <img src={_get(child, 'image[0].small_image', '')} alt={child.color_theme} className="option-img" />
-//                                                     <hr />
-//                                                     <p>{safeGet(child, 'color_theme')}</p>
-//                                                 </div>
-//                                             ))}
-//                                         </div>
-//                                     </div>
-//                                     <div className="option-section">
-//                                         <h4>
-//                                             Size <span className="selected">{safeGet(selectedChild, 'size')}</span>
-//                                         </h4>
-//                                         <div className="option-grid small">
-//                                             <div className="option-card selected">
-//                                                 <p className="size-label">
-//                                                     {safeGet(selectedChild, 'size')}
-//                                                 </p>
+
+//                                 {/* COLOR */}
+//                                 <div className="option-section">
+//                                     <h4>Color <span className="selected">{selectedColor}</span></h4>
+//                                     <div className="option-grid">
+//                                         {colorOptions.map(opt => (
+//                                             <div
+//                                                 key={opt.name}
+//                                                 className={`option-card ${selectedColor === opt.name ? 'selected' : ''}`}
+//                                                 onClick={() => setSelectedColor(opt.name)}
+//                                             >
+//                                                 <img src={opt.image} alt={opt.name} className="option-img" />
 //                                                 <hr />
-//                                                 <div className="size-info">
-//                                                     <div>${parseFloat(state.price || 0).toFixed(2)}</div>
-//                                                     <div>(${parseFloat(state.price || 0).toFixed(2)} / count)</div>
-//                                                 </div>
+//                                                 <p>{opt.name}</p>
 //                                             </div>
-//                                         </div>
+//                                         ))}
 //                                     </div>
-//                                     <div className="option-section">
-//                                         <h4>
-//                                             Styles <span className="selected">{safeGet(selectedChild, 'style')}</span>
-//                                         </h4>
-//                                         {(() => {
-//                                             const isDisabled = false;
-//                                             const isSelected = true;
+//                                 </div>
 
-//                                             return (
-//                                                 <div className='option-grid'>
-//                                                     <div
-//                                                         className={`option-card ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}`}
-//                                                     >
-//                                                         <img
-//                                                             src={_get(selectedChild, 'image[0].small_image', '')}
-//                                                             alt="vash"
-//                                                             className="option-img"
-//                                                         />
-//                                                         <hr />
-//                                                         <div className="style-note">
-//                                                             <h3 className='h3' ><b>{safeGet(selectedChild, "style")}</b></h3>
-//                                                             <span>1 option from</span>
-//                                                             <span className="price">₹{safeGet(selectedChild, "price")}</span>
-//                                                         </div>
-//                                                     </div>
-//                                                 </div>
-//                                             );
-//                                         })()}
-//                                     </div>
-//                                     <div className="option-section">
-//                                         <h4>
-//                                             Delivery By{" "}
-//                                             <span className="selected">
-//                                                 {state.selectedSpeed || "N/A"}
-//                                             </span>
-//                                         </h4>
-
-//                                         <div className="option-grid">
-//                                             {_get(selectedChild, "speed_id", []).map((option, index) => {
-//                                                 const isSelected = option.Type === state.selectedSpeed;
-//                                                 const isDisabled = !option.active;
-//                                                 const type = option.Type?.toLowerCase() || "";
-
-//                                                 const iconMap = {
-//                                                     "same day": <LocationOnIcon fontSize="large" />,
-//                                                     "next day": <LocalShippingIcon fontSize="large" />,
-//                                                     "farm direct": <NatureIcon fontSize="large" />,
-//                                                 };
-//                                                 const Icon = iconMap[type] || <LocationOnIcon fontSize="large" />;
-
+//                                 {/* SIZE */}
+//                                 <div className="option-section">
+//                                     <h4>Size <span className="selected">{selectedSize}</span></h4>
+//                                     <div className="option-grid small">
+//                                         {sizeOptions
+//                                             .sort((a, b) => parseFloat(a.name) - parseFloat(b.name))
+//                                             .map(opt => {
+//                                                 const isSel = String(selectedSize) === String(opt.name);
+//                                                 const childForSize = _find(children, c =>
+//                                                     _get(c, 'color_theme') === selectedColor &&
+//                                                     String(_get(c, 'size')) === String(opt.name)
+//                                                 );
+//                                                 const speedObj = pickDefaultSpeed(_get(childForSize, 'speed_id', []));
+//                                                 const price = _get(speedObj, 'Price', _get(childForSize, 'price', 0));
 //                                                 return (
 //                                                     <div
-//                                                         key={index}
-//                                                         className={`option-card ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}`}
-//                                                         onClick={() => {
-//                                                             if (isDisabled) return;
-//                                                             onSpeedChange(option.Type);
-//                                                         }}
+//                                                         key={opt.name}
+//                                                         className={`option-card size ${isSel ? 'selected' : ''}`}
+//                                                         onClick={() => setSelectedSize(opt.name)}
 //                                                     >
-//                                                         <div className="option-icon">{Icon}</div>
-//                                                         <p className="delivery-type">{safeGet(option, 'Type')}</p>
-//                                                         <span className="delivery-note">
-//                                                             {type === "same day"
-//                                                                 ? "Nationwide fast delivery"
-//                                                                 : type === "next day"
-//                                                                     ? "Hand delivery"
-//                                                                     : type === "farm direct"
-//                                                                         ? "Fresh from farm"
-//                                                                         : "N/A"}
-//                                                         </span>
+//                                                         <div className="size-label">{opt.name}</div>
+//                                                         <hr />
+//                                                         <div className="size-info">
+//                                                             <div>${parseFloat(price || 0).toFixed(2)}</div>
+//                                                             <div>(${parseFloat(price || 0).toFixed(2)} / count)</div>
+//                                                         </div>
 //                                                     </div>
 //                                                 );
 //                                             })}
-//                                         </div>
 //                                     </div>
 //                                 </div>
+
+//                                 {/* STYLE */}
+//                                 <div className="option-section">
+//                                     <h4>Style <span className="selected">{selectedStyle}</span></h4>
+//                                     <div className="option-grid">
+//                                         {styleOptions.map(opt => (
+//                                             <div
+//                                                 key={opt.name}
+//                                                 className={`option-card ${selectedStyle === opt.name ? 'selected' : ''}`}
+//                                                 onClick={() => setSelectedStyle(opt.name)}
+//                                             >
+//                                                 <img src={_get(selectedChild, 'image[0].small_image', '')} alt={opt.name} className="option-img" />
+//                                                 <hr />
+//                                                 <p>{opt.name}</p>
+//                                             </div>
+//                                         ))}
+//                                     </div>
+//                                 </div>
+
+//                                 {/* DELIVERY OPTIONS */}
+//                                 {state.zipcodeVerified && (
+//                                     <div className="option-section">
+//                                         <h4>Delivery Options</h4>
+//                                         {state.deliveryLoading ? (
+//                                             <div className="delivery-loading">
+//                                                 <CircularProgress size={20} /> Checking...
+//                                             </div>
+//                                         ) : (
+//                                             <div className="option-grid">
+//                                                 {state.deliveryOptions.local && (
+//                                                     <div className="option-card selected">
+//                                                         <LocationOnIcon fontSize="large" className="option-icon" />
+//                                                         <p className="delivery-type">Same Day</p>
+//                                                         <span className="delivery-note">Nationwide fast delivery</span>
+//                                                     </div>
+//                                                 )}
+//                                                 {state.deliveryOptions.next_day && (
+//                                                     <div className="option-card selected">
+//                                                         <LocalShippingIcon fontSize="large" className="option-icon" />
+//                                                         <p className="delivery-type">Next Day</p>
+//                                                         <span className="delivery-note">Hand delivery</span>
+//                                                     </div>
+//                                                 )}
+//                                                 {state.deliveryOptions.farm_direct && (
+//                                                     <div className="option-card selected">
+//                                                         <NatureIcon fontSize="large" className="option-icon" />
+//                                                         <p className="delivery-type">Farm Direct</p>
+//                                                         <span className="delivery-note">Fresh from farm</span>
+//                                                     </div>
+//                                                 )}
+//                                                 {!state.deliveryOptions.local && !state.deliveryOptions.next_day && !state.deliveryOptions.farm_direct && (
+//                                                     <p className="no-delivery">Delivery not available</p>
+//                                                 )}
+//                                             </div>
+//                                         )}
+//                                     </div>
+//                                 )}
 //                             </div>
-//                             <div className="product-properties">
-//                                 <div className="label">Brand:</div>
-//                                 <div>{safeGet(selectedChild, "brand_name")}</div>
-//                             </div>
-//                             <div className="product-properties">
-//                                 <div className="label">Product Type:</div>
-//                                 <div>{safeGet(selectedChild, "product_type")}</div>
-//                             </div>
-//                             <div className="product-properties">
-//                                 <div className="label">Product Category:</div>
-//                                 <div>{safeGet(selectedChild, "product_category")}</div>
-//                             </div>
-//                             <div className="product-properties">
-//                                 <div className="label">Country of Origin:</div>
-//                                 <div>{safeGet(selectedChild, "country_of_origin")}</div>
-//                             </div>
-//                             <div className="product-properties">
-//                                 <div className="label">Color:</div>
-//                                 <div>{safeGet(selectedChild, "color_theme")}</div>
-//                             </div>
-//                             <div className="product-properties">
-//                                 <div className="label">Number Of Items:</div>
-//                                 <div>{safeGet(selectedChild, "flower_count")}</div>
-//                             </div>
+
+//                             {/* PRODUCT PROPERTIES */}
+//                             <div className="product-properties"><div className="label">Brand:</div><div>{safeGet(selectedChild, "brand_name")}</div></div>
+//                             <div className="product-properties"><div className="label">Color:</div><div>{selectedColor}</div></div>
+//                             <div className="product-properties"><div className="label">Size:</div><div>{selectedSize}</div></div>
+//                             <div className="product-properties"><div className="label">Style:</div><div>{selectedStyle}</div></div>
 //                             <hr />
 //                             <h1 className="sectionTitle">About this item:</h1>
 //                             <div className="product-description">{safeGet(selectedChild, 'short_description')}</div>
 //                             <hr />
 //                         </div>
 //                     </Col>
-//                     <Col
-//                         lg="3"
-//                         className={`pdp-buy ${isLargeScreen ? 'sticky-right' : ''}`}
-//                     >
+
+//                     {/* BUY BOX */}
+//                     <Col lg="3" className={`pdp-buy ${isLargeScreen ? 'sticky-right' : ''}`}>
 //                         <div className="free-delivery-banner">
 //                             <div className="price-section">
 //                                 <span className="main-price">
-//                                     {_get(selectedChild, "price") || state.price ? (
-//                                         <>
-//                                             <span className="currency">$</span>
-//                                             <span className="price-int">
-//                                                 {Math.floor(parseFloat(_get(selectedChild, "price") || state.price || 0))}
-//                                                 <sup className="price-dec">
-//                                                     {((parseFloat(_get(selectedChild, "price") || state.price || 0) % 1)
-//                                                         .toFixed(2)
-//                                                         .split(".")[1])}
-//                                                 </sup>
-//                                             </span>
-//                                             <span className="per-count">
-//                                                 (${parseFloat(_get(selectedChild, "price") || state.price || 0).toFixed(2)}/count)
-//                                             </span>
-//                                         </>
-//                                     ) : (
-//                                         <span className="price-na">N/A</span>
-//                                     )}
+//                                     <span className="currency">$</span>
+//                                     <span className="price-int">{Math.floor(parseFloat(state.price || 0))}</span>
+//                                     <sup className="price-dec">{(parseFloat(state.price || 0) % 1).toFixed(2).split('.')[1]}</sup>
+//                                     <span className="per-count">(${parseFloat(state.price || 0).toFixed(2)}/count)</span>
 //                                 </span>
 //                             </div>
-//                             {/* <div className="free-delivery-today">
-//                                 FREE Delivery
-//                                 <strong>Monday,<br /> November 10</strong>
-//                             </div>
-//                             <div className="countdown-banner">
-//                                 <div className="countdown-text">
-//                                     Get FREE Delivery <strong>Thursday, November <br /> 6</strong>. Order within{' '}
-//                                     {timeLeft.hours} Hr {formatTime(timeLeft.minutes)} Mins.
-//                                 </div>
-//                             </div> */}
+
 //                             <div className="location">
 //                                 <ZipcodeInput
 //                                     zipcode={state.zipcode}
-//                                     onCheck={onZipLookup}
-//                                     onZipChange={() => {
-//                                         setState(prev => ({
-//                                             ...prev,
-//                                             zipcodeVerified: false,
-//                                             zipCodeMessage: '',
-//                                         }));
-//                                     }}
-//                                     loading={state.zipcodeLoading}
+//                                     onCheck={checkDeliveryOptions}
+//                                     onZipChange={() => setState(prev => ({
+//                                         ...prev,
+//                                         zipcodeVerified: false,
+//                                         zipCodeMessage: '',
+//                                         deliveryOptions: { local: false, next_day: false, farm_direct: false, serviceable_zipcode: false },
+//                                         deliveryLoading: false,
+//                                     }))}
+//                                     loading={state.deliveryLoading}
 //                                     verified={state.zipcodeVerified}
-//                                     zipcodeLength={ZIPCODE_LENGTH}
 //                                     message={state.zipCodeMessage}
+//                                     zipcodeLength={ZIPCODE_LENGTH}
+//                                     disabled={!selectedChild.id}
 //                                 />
 //                             </div>
+
 //                             <div className="stock-status">{safeGet(selectedChild, 'stock_availability')}</div>
-//                             {!zipVerified && (
-//                                 <div className="zip-required-message">
-//                                     Please enter and verify your zip code to buy.
+//                             {!selectedChild.id ? (
+//                                 <div className="text-center p-3">
+//                                     <CircularProgress size={20} /> Loading product...
 //                                 </div>
-//                             )}
-//                             {zipVerified && (
+//                             ) : !zipVerified ? (
+//                                 <div className="zip-required-message">Verify zip code to buy</div>
+//                             ) : (
 //                                 <>
 //                                     <div className="quantity-selector">
-//                                         <QuantitySelector
-//                                             value={state.defaultQuantity}
-//                                             onChange={onQuantityChange}
-//                                             disabled={!inStock}
-//                                             max={24}
-//                                         />
+//                                         <QuantitySelector value={state.defaultQuantity} onChange={onQuantityChange} disabled={!inStock} max={24} />
 //                                     </div>
 //                                     <Button
 //                                         className="buy-now-btn"
 //                                         disabled={!inStock || state.addToCartLoading}
 //                                         onClick={onAddToCart}
 //                                     >
-//                                         {state.addToCartLoading ? (
-//                                             <CircularProgress size={12} className="circleprogress" />
-//                                         ) : inStock ? (
-//                                             'Buy Now'
-//                                         ) : (
-//                                             'OUT OF STOCK'
-//                                         )}
+//                                         {state.addToCartLoading ? <CircularProgress size={12} /> : inStock ? 'Buy Now' : 'OUT OF STOCK'}
 //                                     </Button>
 //                                 </>
 //                             )}
@@ -852,25 +781,24 @@
 //                     </Col>
 //                 </Row>
 //             </Container>
+
 //             <hr />
-//             {/* <FrequentlyBought /> */}
-//             {/* <hr /> */}
-//             <ManufacturerInfo />
+//             <ManufacturerInfo productData={selectedChild} />
 //             <hr />
 //             <div className='prod-des'>
 //                 <h3>Product Description</h3>
 //                 <p>{safeGet(selectedChild, "description")}</p>
 //             </div>
 //             <hr />
-//             <ProductCard />
+//             <ProductCard selectedChild={selectedChild} />
 //             <hr />
 //             <div className='prod-des'>
 //                 <h3>Important information</h3>
 //                 <h5>Legal Disclaimer</h5>
-//                 <p>Statements regarding dietary supplements have not been evaluated by the FDA and are not intended to diagnose, treat, cure, or prevent any disease or health condition.</p>
+//                 <p>Statements regarding dietary supplements have not been evaluated by the FDA...</p>
 //             </div>
 //             <hr />
-//             <ReviewsComponent />
+//             <ReviewsComponent selectedChild={selectedChild} />
 //         </div>
 //     );
 // };
@@ -881,9 +809,14 @@
 // });
 
 // export default connect(mapStateToProps)(ProductDetails);
-
-
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+/*  ProductDetails.jsx  */
+import React, {
+    useState,
+    useEffect,
+    useCallback,
+    useRef,
+    useMemo,
+} from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import StarHalfIcon from '@material-ui/icons/StarHalf';
@@ -893,24 +826,28 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import NatureIcon from '@material-ui/icons/Nature';
 import ShareIcon from '@material-ui/icons/Share';
 import { connect } from 'react-redux';
-import { map as _map, get as _get, isEmpty as _isEmpty, find as _find, reduce as _reduce, filter as _filter, uniqBy as _uniqBy } from 'lodash';
+import {
+    map as _map,
+    get as _get,
+    isEmpty as _isEmpty,
+    reduce as _reduce,
+    find as _find,
+    filter as _filter,
+    uniqBy as _uniqBy,
+} from 'lodash';
 import { Container, Row, Col, Button } from 'reactstrap';
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
-import 'antd/dist/antd.css';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { isMobile } from 'react-device-detect';
 import '../../App.css';
-
 import genericGetData from "../../Redux/Actions/genericGetData";
 import { genericPostData } from "../../Redux/Actions/genericPostData";
 import { LoaderOverLay } from '../../Global/UIComponents/LoaderHoc';
-import { commonActionCreater } from "../../Redux/Actions/commonAction";
 import { cleanEntityData } from '../../Global/helper/commonUtil';
 import QuantitySelector from './QuantitySelector';
 import ZipcodeInput from './ZipcodeInput';
 import showMessage from '../../Redux/Actions/toastAction';
-import { APPLICATION_BFF_URL } from '../../Redux/urlConstants';
 import { ProductView, PageView, ProductAddedtoCart } from '../../Global/helper/react-ga';
 import ManufacturerInfo from './ManufacturerInfo';
 import ProductCard from './ProductCard';
@@ -919,6 +856,7 @@ import './ProductDetails.scss';
 
 const ZIPCODE_LENGTH = 5;
 
+/* ------------------------------------------------------------------ */
 const ProductDetails = ({
     dispatch,
     productDetailsData = {},
@@ -926,6 +864,7 @@ const ProductDetails = ({
     match,
     history,
 }) => {
+    /* -------------------------- STATE -------------------------- */
     const [state, setState] = useState({
         isLoading: true,
         defaultQuantity: 1,
@@ -934,7 +873,6 @@ const ProductDetails = ({
         size: '',
         selectedSpeed: '',
         speedDropdown: [],
-        productDetailMap: {},
         vendorData: {},
         zipcode: localStorage.getItem('zipcode') || '',
         zipcodeLoading: false,
@@ -942,82 +880,113 @@ const ProductDetails = ({
         zipCodeMessage: '',
         addToCartLoading: false,
         productPrice: '',
+        deliveryOptions: {
+            local: false,
+            next_day: false,
+            farm_direct: false,
+            serviceable_zipcode: false,
+        },
+        deliveryLoading: false,
     });
 
     const prevProductIdRef = useRef();
     const galleryRef = useRef(null);
     const [isShareClicked, setIsShareClicked] = useState(false);
     const [showCopiedLabel, setShowCopiedLabel] = useState(false);
-    const [timeLeft, setTimeLeft] = useState({ hours: 1, minutes: 10, seconds: 0 });
     const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 992);
 
-    // Extract children safely
+    /* ----------------------- VARIANT LOGIC ----------------------- */
     const children = useMemo(() => {
-        const products = _get(productDetailsData, 'variation_family.products', []);
-        return Array.isArray(products) ? products : [];
+        const prods = _get(productDetailsData, 'variation_family.products', []);
+        return Array.isArray(prods) ? prods : [];
     }, [productDetailsData]);
 
-    // Extract unique colors, sizes, styles with product IDs
-    const colorOptions = useMemo(() => {
-        return _uniqBy(
-            children.map(child => ({
-                name: _get(child, 'color_theme', 'Unknown'),
-                id: child.id,
-                image: _get(child, 'image[0].small_image', ''),
-            })),
-            'name'
-        );
-    }, [children]);
+    const colorOptions = useMemo(
+        () =>
+            _uniqBy(
+                children.map(c => ({
+                    name: _get(c, 'color_theme', 'Unknown'),
+                    id: c.id,
+                    image: _get(c, 'image[0].small_image', ''),
+                })),
+                'name'
+            ),
+        [children]
+    );
 
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedStyle, setSelectedStyle] = useState('');
 
-    // Filter children by selected color
-    const filteredByColor = useMemo(() => {
-        if (!selectedColor) return children;
-        return _filter(children, child => _get(child, 'color_theme') === selectedColor);
-    }, [children, selectedColor]);
+    const filteredByColor = useMemo(
+        () =>
+            selectedColor
+                ? _filter(children, c => _get(c, 'color_theme') === selectedColor)
+                : children,
+        [children, selectedColor]
+    );
 
-    // Available sizes for selected color
-    const sizeOptions = useMemo(() => {
-        return _uniqBy(
-            filteredByColor.map(child => ({
-                name: _get(child, 'size', 'N/A'),
-                id: child.id,
-            })),
-            'name'
-        );
-    }, [filteredByColor]);
+    const sizeOptions = useMemo(
+        () =>
+            _uniqBy(
+                filteredByColor.map(c => ({
+                    name: _get(c, 'size', 'N/A'),
+                    id: c.id,
+                })),
+                'name'
+            ),
+        [filteredByColor]
+    );
 
-    // Available styles for selected color + size
-    const filteredBySize = useMemo(() => {
-        if (!selectedSize) return filteredByColor;
-        return _filter(filteredByColor, child => String(_get(child, 'size')) === String(selectedSize));
-    }, [filteredByColor, selectedSize]);
+    const filteredBySize = useMemo(
+        () =>
+            selectedSize
+                ? _filter(
+                    filteredByColor,
+                    c => String(_get(c, 'size')) === String(selectedSize)
+                )
+                : filteredByColor,
+        [filteredByColor, selectedSize]
+    );
 
-    const styleOptions = useMemo(() => {
-        return _uniqBy(
-            filteredBySize.map(child => ({
-                name: _get(child, 'style', 'N/A'),
-                id: child.id,
-            })),
-            'name'
-        );
-    }, [filteredBySize]);
+    const styleOptions = useMemo(
+        () =>
+            _uniqBy(
+                filteredBySize.map(c => ({
+                    name: _get(c, 'style', 'N/A'),
+                    id: c.id,
+                })),
+                'name'
+            ),
+        [filteredBySize]
+    );
 
-    // Selected child (final product)
     const selectedChild = useMemo(() => {
-        return _find(children, child =>
-            _get(child, 'color_theme') === selectedColor &&
-            String(_get(child, 'size')) === String(selectedSize) &&
-            _get(child, 'style') === selectedStyle
-        ) || filteredBySize[0] || filteredByColor[0] || children[0] || {};
-    }, [children, selectedColor, selectedSize, selectedStyle, filteredBySize, filteredByColor]);
+        return (
+            _find(
+                children,
+                c =>
+                    _get(c, 'color_theme') === selectedColor &&
+                    String(_get(c, 'size')) === String(selectedSize) &&
+                    _get(c, 'style') === selectedStyle
+            ) ||
+            filteredBySize[0] ||
+            filteredByColor[0] ||
+            children[0] ||
+            {}
+        );
+    }, [
+        children,
+        selectedColor,
+        selectedSize,
+        selectedStyle,
+        filteredBySize,
+        filteredByColor,
+    ]);
 
-    // Default selection on load
+    /* ---- Auto-select first variant when data arrives ---- */
     useEffect(() => {
-        if (children.length > 0 && !selectedColor) {
+        if (children.length && !selectedColor) {
             const first = children[0];
             setSelectedColor(_get(first, 'color_theme'));
             setSelectedSize(_get(first, 'size'));
@@ -1025,32 +994,29 @@ const ProductDetails = ({
         }
     }, [children, selectedColor]);
 
-    // Reset size/style when color changes
     useEffect(() => {
-        if (selectedColor && filteredByColor.length > 0) {
+        if (selectedColor && filteredByColor.length && !selectedSize) {
             const first = filteredByColor[0];
             setSelectedSize(_get(first, 'size'));
             setSelectedStyle(_get(first, 'style'));
         }
-    }, [selectedColor, filteredByColor]);
+    }, [selectedColor, filteredByColor, selectedSize]);
 
-    // Reset style when size changes
     useEffect(() => {
-        if (selectedSize && filteredBySize.length > 0) {
+        if (selectedSize && filteredBySize.length && !selectedStyle) {
             const first = filteredBySize[0];
             setSelectedStyle(_get(first, 'style'));
         }
-    }, [selectedSize, filteredBySize]);
+    }, [selectedSize, filteredBySize, selectedStyle]);
 
-    // Pick default speed
-    const pickDefaultSpeed = (speeds = []) => {
+    /* ----------------------- PRICE & SPEED ----------------------- */
+    const pickDefaultSpeed = useCallback((speeds = []) => {
         const active = Array.isArray(speeds) ? speeds.filter(s => s.active) : [];
         const nextDay = active.find(s => s.Type?.toLowerCase() === 'next day');
         const sameDay = active.find(s => s.Type?.toLowerCase() === 'same day');
         return nextDay || sameDay || active[0] || {};
-    };
+    }, []);
 
-    // Update state when selectedChild changes
     useEffect(() => {
         const speedObj = pickDefaultSpeed(_get(selectedChild, 'speed_id', []));
         const basePrice = _get(speedObj, 'Price', _get(selectedChild, 'price', 0));
@@ -1072,12 +1038,12 @@ const ProductDetails = ({
             })),
             vendorData: {
                 id: _get(speedObj, 'Vendor_id'),
-                name: _get(speedObj, 'Vendor_name')
+                name: _get(speedObj, 'Vendor_name'),
             },
         }));
-    }, [selectedChild, state.defaultQuantity]);
+    }, [selectedChild, state.defaultQuantity, pickDefaultSpeed]);
 
-    // Share handler
+    /* -------------------------- SHARE -------------------------- */
     const handleShare = useCallback(() => {
         const productUrl = `${window.location.origin}/store/${match.params.productID}`;
         setIsShareClicked(true);
@@ -1085,47 +1051,53 @@ const ProductDetails = ({
         setShowCopiedLabel(true);
         setTimeout(() => setShowCopiedLabel(false), 2000);
 
-        navigator.clipboard.writeText(productUrl).catch(() => {
-            const ta = document.createElement('textarea');
-            ta.value = productUrl;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-        });
+        navigator.clipboard
+            .writeText(productUrl)
+            .catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = productUrl;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            });
     }, [match.params.productID]);
 
-    // Fetch product
-    const fetchProduct = useCallback((productId) => {
-        const loc_id = localStorage.getItem('vendor_location_id');
-        const dineinTime = localStorage.getItem('dineinTime');
-        const zipcode = localStorage.getItem('zipcode') || '';
-        const couriertype = localStorage.getItem('couriertype') || '';
+    /* ---------------------- FETCH PRODUCT ---------------------- */
+    const fetchProduct = useCallback(
+        productId => {
+            const loc_id = localStorage.getItem('vendor_location_id') || '';
+            const dineinTime = localStorage.getItem('dineinTime') || '';
+            const zipcode = localStorage.getItem('zipcode') || '';
+            const couriertype = localStorage.getItem('couriertype') || '';
 
-        setState(prev => ({ ...prev, isLoading: true }));
-
-        genericGetData({
-            dispatch,
-            url: `/connect/index/product?prodid=37529&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zipcode}&courier_type=${couriertype}`,
-            constants: {
-                init: "PRODUCT_DETAILS_LIST_INIT",
-                success: "PRODUCT_DETAILS_LIST_SUCCESS",
-                error: "PRODUCT_DETAILS_LIST_ERROR",
-            },
-            identifier: "PRODUCT_DETAILS_LIST",
-            successCb: (data) => {
-                setState(prev => ({ ...prev, isLoading: false }));
-                ProductView(cleanEntityData({
-                    productId,
-                    name: _get(data, 'name'),
-                    price: _get(selectedChild, 'price')
-                }));
-                PageView();
-            },
-            errorCb: () => setState(prev => ({ ...prev, isLoading: false })),
-            dontShowMessage: true,
-        });
-    }, [dispatch, selectedChild]);
+            setState(prev => ({ ...prev, isLoading: true }));
+            genericGetData({
+                dispatch,
+                url: `/connect/index/product?prodid=37529&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zipcode}&courier_type=${couriertype}`,
+                constants: {
+                    init: 'PRODUCT_DETAILS_LIST_INIT',
+                    success: 'PRODUCT_DETAILS_LIST_SUCCESS',
+                    error: 'PRODUCT_DETAILS_LIST_ERROR',
+                },
+                identifier: 'PRODUCT_DETAILS_LIST',
+                successCb: () => {
+                    setState(prev => ({ ...prev, isLoading: false }));
+                    ProductView(
+                        cleanEntityData({
+                            productId,
+                            name: _get(selectedChild, 'name'),
+                            price: state.price,
+                        })
+                    );
+                    PageView();
+                },
+                errorCb: () => setState(prev => ({ ...prev, isLoading: false })),
+                dontShowMessage: true,
+            });
+        },
+        [dispatch, selectedChild, state.price]
+    );
 
     useEffect(() => {
         const currentId = match.params.productID;
@@ -1135,182 +1107,351 @@ const ProductDetails = ({
         }
     }, [match.params.productID, fetchProduct]);
 
-    // Timer
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                let { hours, minutes, seconds } = prev;
-                if (seconds > 0) seconds--;
-                else if (minutes > 0) { minutes--; seconds = 59; }
-                else if (hours > 0) { hours--; minutes = 59; seconds = 59; }
-                else { clearInterval(timer); return prev; }
-                return { hours, minutes, seconds };
-            });
-        }, 1000);
-        return () => clearInterval(timer);
-    }, []);
+    /* ------------------- ZIPCODE & DELIVERY ------------------- */
+    const checkDeliveryOptions = useCallback(
+        zipcode => {
+            if (!zipcode || zipcode.length !== ZIPCODE_LENGTH) {
+                dispatch(
+                    showMessage({ text: `Enter a ${ZIPCODE_LENGTH}-digit zipcode`, isSuccess: false })
+                );
+                return;
+            }
 
-    // Zipcode restore
-    useEffect(() => {
-        const savedZip = localStorage.getItem('zipcode');
-        if (savedZip && savedZip.length === ZIPCODE_LENGTH) {
+            if (!selectedChild.id) {
+                setState(prev => ({ ...prev, zipCodeMessage: 'Product not loaded yet' }));
+                return;
+            }
+
+            const loc_id = localStorage.getItem('vendor_location_id') || '';
+            if (!loc_id) {
+                setState(prev => ({ ...prev, zipCodeMessage: 'Location not available' }));
+                return;
+            }
+
             setState(prev => ({
                 ...prev,
-                zipcode: savedZip,
-                zipcodeVerified: true,
+                deliveryLoading: true,
+                zipcodeVerified: false,
                 zipCodeMessage: '',
             }));
+
+            const query = new URLSearchParams({
+                product_id: selectedChild.id,
+                location_ids: loc_id,
+                zipcode,
+                store_id: '1',
+            }).toString();
+
+            genericPostData({
+                dispatch,
+                reqObj: {},
+                url: `/connect/index/checkDeliveryOptions?${query}`,
+                constants: {
+                    init: 'CHECK_DELIVERY_INIT',
+                    success: 'CHECK_DELIVERY_SUCCESS',
+                    error: 'CHECK_DELIVERY_ERROR',
+                },
+                identifier: 'CHECK_DELIVERY',
+                dontShowMessage: true,
+                successCb: responseArray => {
+                    const response = Array.isArray(responseArray) ? responseArray[0] : responseArray;
+                    const data = response?.data || {};
+                    const serviceable = !!data.serviceable_zipcode;
+
+                    setState(prev => ({
+                        ...prev,
+                        deliveryLoading: false,
+                        zipcodeVerified: serviceable,
+                        zipCodeMessage: serviceable ? '' : response.message || 'Delivery not available',
+                        deliveryOptions: {
+                            local: !!data.local,
+                            next_day: !!data.next_day,
+                            farm_direct: !!data.farm_direct,
+                            serviceable_zipcode: serviceable,
+                        },
+                        zipcode,
+                    }));
+
+                    if (serviceable) localStorage.setItem('zipcode', zipcode);
+                },
+                errorCb: err => {
+                    setState(prev => ({
+                        ...prev,
+                        deliveryLoading: false,
+                        zipcodeVerified: false,
+                        zipCodeMessage: err?.message || 'Network error',
+                    }));
+                },
+            });
+        },
+        [dispatch, selectedChild.id]
+    );
+
+    // Auto-verify saved zip once product is ready
+    useEffect(() => {
+        const saved = localStorage.getItem('zipcode');
+        if (
+            saved &&
+            saved.length === ZIPCODE_LENGTH &&
+            selectedChild.id &&
+            !state.zipcodeVerified
+        ) {
+            const timer = setTimeout(() => checkDeliveryOptions(saved), 300);
+            return () => clearTimeout(timer);
         }
-    }, []);
+    }, [selectedChild.id, state.zipcodeVerified, checkDeliveryOptions]);
 
-    const formatTime = (num) => String(num).padStart(2, '0');
+    // Persist vendor_location_id for the selected speed
+    useEffect(() => {
+        const productLocId = _get(selectedChild, 'location_id');
+        const speedLocId = _get(pickDefaultSpeed(_get(selectedChild, 'speed_id', [])), 'Loc_id');
+        const finalLocId = speedLocId || productLocId;
+        if (finalLocId) localStorage.setItem('vendor_location_id', finalLocId);
+    }, [selectedChild, pickDefaultSpeed]);
 
-    // Handlers
-    const onQuantityChange = useCallback((qty) => {
-        const basePrice = state.price || 0;
-        const total = (qty * parseFloat(basePrice)).toFixed(2);
-        setState(prev => ({ ...prev, defaultQuantity: qty, productPrice: total }));
-    }, [state.price]);
-
-    const onSpeedChange = useCallback((speedType) => {
-        const speedObj = _find(_get(selectedChild, 'speed_id', []), { Type: speedType });
-        if (!speedObj) return;
-        const basePrice = _get(speedObj, 'Price', _get(selectedChild, 'price', 0));
-        const total = (state.defaultQuantity * parseFloat(basePrice || 0)).toFixed(2);
-
+    /* -------------------------- HANDLERS -------------------------- */
+    const onQuantityChange = useCallback(qty => {
+        const num = Number(qty) || 1;
         setState(prev => ({
             ...prev,
-            selectedSpeed: speedType,
-            price: basePrice,
-            productPrice: total,
-            vendorData: {
-                id: _get(speedObj, 'Vendor_id'),
-                name: _get(speedObj, 'Vendor_name'),
-            },
+            defaultQuantity: num,
+            productPrice: (num * parseFloat(prev.price || 0)).toFixed(2),
         }));
-    }, [selectedChild, state.defaultQuantity]);
+    }, []);
 
-    const onZipLookup = useCallback((zip) => {
-        if (!zip || zip.length !== ZIPCODE_LENGTH) {
-            dispatch(showMessage({ text: `Enter a ${ZIPCODE_LENGTH}-digit zipcode`, isSuccess: false }));
-            return;
-        }
+    const onSpeedChange = useCallback(
+        speedType => {
+            const speedObj = _find(_get(selectedChild, 'speed_id', []), { Type: speedType });
+            if (!speedObj) return;
+            const basePrice = _get(speedObj, 'Price', _get(selectedChild, 'price', 0));
+            const total = (state.defaultQuantity * parseFloat(basePrice || 0)).toFixed(2);
+            setState(prev => ({
+                ...prev,
+                selectedSpeed: speedType,
+                price: basePrice,
+                productPrice: total,
+                vendorData: { id: _get(speedObj, 'Vendor_id'), name: _get(speedObj, 'Vendor_name') },
+            }));
+        },
+        [selectedChild, state.defaultQuantity]
+    );
 
-        setState(prev => ({ ...prev, zipcodeLoading: true, zipcodeVerified: false, zipCodeMessage: '' }));
-        const loc_id = localStorage.getItem('vendor_location_id');
-        const dineinTime = localStorage.getItem('dineinTime');
-        const couriertype = localStorage.getItem('couriertype') || '';
+    // const onAddToCart = useCallback(() => {
+    //     if (!state.zipcodeVerified) {
+    //         dispatch(showMessage({ text: 'Please verify zipcode first', isSuccess: false }));
+    //         return;
+    //     }
 
-        // fetch(`${APPLICATION_BFF_URL}/connect/index/product?prodid=${match.params.productID}&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zip}&courier_type=${couriertype}`)
-        fetch(`${APPLICATION_BFF_URL}/connect/index/product?prodid=37529&store_id=1&loc_id=${loc_id}&dineinTime=${dineinTime}&zipCode=${zip}&courier_type=${couriertype}`)
-            .then(r => r.json())
-            .then(data => {
-                setState(prev => ({ ...prev, zipcodeLoading: false }));
-                if (data?.errorCode === 1) {
-                    setState(prev => ({ ...prev, zipcodeVerified: false, zipCodeMessage: data?.message || 'Invalid zipcode' }));
-                    return;
-                }
-                localStorage.setItem('zipcode', zip);
-                setState(prev => ({ ...prev, zipcode: zip, zipcodeVerified: true, zipCodeMessage: '' }));
-                dispatch({ type: 'PRODUCT_DETAILS_LIST_SUCCESS', data, receivedAt: Date.now() });
-            })
-            .catch(() => setState(prev => ({ ...prev, zipcodeLoading: false })));
-    }, [dispatch]);
+    //     const locId = state.vendorData.id || localStorage.getItem('vendor_location_id') || '';
 
+    //     const req = {
+    //         product_id: selectedChild.id,
+    //         qty: Number(state.defaultQuantity) || 1,
+    //         api_token: localStorage.getItem('token') || '',
+    //         cart_id: localStorage.getItem('cart_id') || '',
+    //         zipcode: localStorage.getItem('zipcode'),
+    //         loc_id: locId,
+    //         wallet: 0,
+    //         speed_id: state.selectedSpeed,
+    //         store_id: 1,
+    //     };
+
+    //     setState(prev => ({ ...prev, addToCartLoading: true }));
+
+    //     genericPostData({
+    //         dispatch,
+    //         reqObj: req,
+    //         url: `/api/cart/addtocart`,
+    //         constants: {
+    //             init: 'ADD_TO_CART_INIT',
+    //             success: 'ADD_TO_CART_SUCCESS',
+    //             error: 'ADD_TO_CART_ERROR',
+    //         },
+    //         identifier: 'ADD_TO_CART',
+    //         successCb: ([{ code, message, cart_id, total_products_in_cart }]) => {
+    //             setState(prev => ({ ...prev, addToCartLoading: false }));
+    //             if (code === 1) {
+    //                 ProductAddedtoCart(
+    //                     cleanEntityData({
+    //                         productId: match.params.productID,
+    //                         name: _get(selectedChild, 'name'),
+    //                         price: state.price,
+    //                         quantity: Number(state.defaultQuantity),
+    //                     })
+    //                 );
+    //                 localStorage.setItem('cart_id', cart_id);
+    //                 localStorage.setItem('total_products_in_cart', total_products_in_cart);
+
+    //                 const token = _get(userSignInInfo, '[0].result.api_token', '');
+    //                 if (_isEmpty(token)) history.push('/guest/register');
+    //                 else history.push('/cart');
+    //             } else {
+    //                 dispatch(showMessage({ text: message, isSuccess: false }));
+    //             }
+    //         },
+    //         errorCb: err => {
+    //             setState(prev => ({ ...prev, addToCartLoading: false }));
+    //             dispatch(
+    //                 showMessage({
+    //                     text: err?.message || 'Failed to add to cart',
+    //                     isSuccess: false,
+    //                 })
+    //             );
+    //         },
+    //         dontShowMessage: true,
+    //     });
+    // }, [
+    //     dispatch,
+    //     history,
+    //     match.params.productID,
+    //     selectedChild,
+    //     state.defaultQuantity,
+    //     state.price,
+    //     state.selectedSpeed,
+    //     state.zipcodeVerified,
+    //     state.vendorData.id,
+    //     userSignInInfo,
+    // ]);
+
+
+    /* -------------------------- ADD TO CART -------------------------- */
     const onAddToCart = useCallback(() => {
-        if (!localStorage.getItem('zipcode')) {
+        if (!state.zipcodeVerified) {
             dispatch(showMessage({ text: 'Please verify zipcode first', isSuccess: false }));
             return;
         }
 
-        const locId = state.vendorData.id ? state.productDetailMap[`${selectedSize?.toLowerCase()}_${state.selectedSpeed?.toLowerCase()}`]?.locId : '';
+        const locId = state.vendorData.id || localStorage.getItem('vendor_location_id') || '';
 
+        /* ---- PAYLOAD THAT THE BACKEND EXPECTS ---- */
         const req = {
             product_id: selectedChild.id,
-            qty: state.defaultQuantity,
-            api_token: localStorage.getItem('Token'),
-            cart_id: localStorage.getItem('cart_id'),
-            zipcode: localStorage.getItem('zipcode'),
+            quantity: Number(state.defaultQuantity) || 1,   // <-- quantity, NOT qty
+            api_token: localStorage.getItem('token') || '',
+            cart_id: localStorage.getItem('cart_id') || '',
+            zipcode: localStorage.getItem('zipcode') || '',
             loc_id: locId,
             wallet: 0,
             speed_id: state.selectedSpeed,
+            store_id: 1,
+            // OPTIONAL – some BFF versions also read these:
+            size: _get(selectedChild, 'size', ''),
+            color: selectedColor,
+            style: _get(selectedChild, 'style', ''),
         };
 
+        console.log('Add-to-Cart payload →', req); // <-- keep for debugging, remove in prod
+
         setState(prev => ({ ...prev, addToCartLoading: true }));
+
         genericPostData({
             dispatch,
             reqObj: req,
             url: `/api/cart/addtocart`,
-            constants: { init: 'ADD_TO_CART_INIT', success: 'ADD_TO_CART_SUCCESS', error: 'ADD_TO_CART_ERROR' },
+            constants: {
+                init: 'ADD_TO_CART_INIT',
+                success: 'ADD_TO_CART_SUCCESS',
+                error: 'ADD_TO_CART_ERROR',
+            },
             identifier: 'ADD_TO_CART',
             successCb: ([{ code, message, cart_id, total_products_in_cart }]) => {
                 setState(prev => ({ ...prev, addToCartLoading: false }));
                 if (code === 1) {
-                    ProductAddedtoCart(cleanEntityData({
-                        productId: match.params.productID,
-                        name: _get(selectedChild, 'name'),
-                        price: state.price,
-                        quantity: state.defaultQuantity,
-                    }));
+                    ProductAddedtoCart(
+                        cleanEntityData({
+                            productId: match.params.productID,
+                            name: _get(selectedChild, 'name'),
+                            price: state.price,
+                            quantity: Number(state.defaultQuantity),
+                        })
+                    );
                     localStorage.setItem('cart_id', cart_id);
                     localStorage.setItem('total_products_in_cart', total_products_in_cart);
-                    if (_isEmpty(_get(userSignInInfo, '[0].result.api_token', ''))) {
-                        history.push('/guest/register');
-                    } else {
-                        history.push('/cart');
-                    }
+
+                    const token = _get(userSignInInfo, '[0].result.api_token', '');
+                    if (_isEmpty(token)) history.push('/guest/register');
+                    else history.push('/cart');
                 } else {
                     dispatch(showMessage({ text: message, isSuccess: false }));
                 }
             },
-            errorCb: () => setState(prev => ({ ...prev, addToCartLoading: false })),
+            errorCb: err => {
+                setState(prev => ({ ...prev, addToCartLoading: false }));
+                dispatch(
+                    showMessage({
+                        text: err?.message || 'Failed to add to cart',
+                        isSuccess: false,
+                    })
+                );
+            },
             dontShowMessage: true,
         });
-    }, [dispatch, history, match.params.productID, selectedChild, selectedSize, state.defaultQuantity, state.price, state.productDetailMap, state.selectedSpeed, state.vendorData.id, userSignInInfo]);
+    }, [
+        dispatch,
+        history,
+        match.params.productID,
+        selectedChild,
+        state.defaultQuantity,
+        state.price,
+        state.selectedSpeed,
+        state.zipcodeVerified,
+        state.vendorData.id,
+        userSignInInfo,
+        selectedColor,
+    ]);
+    /* -------------------------- GALLERY -------------------------- */
+    const imageArr = useMemo(() => _reduce(_get(selectedChild, 'image', []), (acc, im) => {
+        if (im?.small_image) acc.push(im.small_image);
+        else if (im?.additional_images) {
+            _map(im.additional_images, a => a?.additional_image && acc.push(a.additional_image));
+        }
+        return acc;
+    }, []), [selectedChild]);
 
-    // Gallery
-    const imageArr = useMemo(() => {
-        return _reduce(_get(selectedChild, 'image', []), (acc, im) => {
-            if (im && im.hasOwnProperty('small_image')) acc.push(_get(im, 'small_image', ''));
-            else if (im && im.hasOwnProperty('additional_images')) {
-                _map(_get(im, 'additional_images', []), a => acc.push(_get(a, 'additional_image', '')));
-            }
-            return acc;
-        }, []);
-    }, [selectedChild]);
-
-    const galleryItems = useMemo(() => {
-        return _map(imageArr, (url, i) => {
-            if (!url) return null;
-            const separator = url.includes('?') ? '&' : '?';
-            const thumbnail = `${url}${separator}width=100&height=100&quality=80`;
-            return {
-                original: url,
-                thumbnail,
-                originalAlt: `Product image ${i + 1}`,
-                thumbnailAlt: `Thumbnail ${i + 1}`,
-            };
-        }).filter(Boolean);
-    }, [imageArr]);
+    const galleryItems = useMemo(
+        () =>
+            _map(imageArr, (url, i) => {
+                if (!url) return null;
+                const sep = url.includes('?') ? '&' : '?';
+                const thumbnail = `${url}${sep}width=100&height=100&quality=80`;
+                return {
+                    original: url,
+                    thumbnail,
+                    originalAlt: `Product ${i + 1}`,
+                    thumbnailAlt: `Thumb ${i + 1}`,
+                };
+            }).filter(Boolean),
+        [imageArr]
+    );
 
     const safeGet = (obj, path, fallback = 'N/A') => {
-        const value = _get(obj, path);
-        return value === null || value === undefined || value === "" ? fallback : value;
+        const v = _get(obj, path);
+        return v == null || v === '' ? fallback : v;
     };
 
-    const inStock = _get(selectedChild, 'stock_availability', '').toLowerCase() === 'in stock';
-    const zipVerified = state.zipcodeVerified && !!localStorage.getItem('zipcode');
+    const inStock = _get(selectedChild, 'stock_availability', '')
+        .toLowerCase()
+        .includes('in stock');
+    const zipVerified = state.zipcodeVerified;
 
+    /* -------------------------- RENDER -------------------------- */
     if (state.isLoading) return <LoaderOverLay />;
-    if (_isEmpty(productDetailsData) && !state.isLoading) {
-        return <div style={{ padding: '2rem', textAlign: 'center' }}>Product not found</div>;
-    }
+    if (_isEmpty(productDetailsData))
+        return (
+            <div style={{ padding: '2rem', textAlign: 'center' }}>
+                Product not found
+            </div>
+        );
 
     return (
         <div className="page-content-container">
             <Container fluid className="productDetails">
                 <Row className="no-gutters justify-content-lg-between secMinHeight w-100 main-conainer">
-                    <Col lg="4" className={`pdp-image-galary ${isLargeScreen ? 'sticky-left' : ''}`}>
+                    {/* IMAGE GALLERY */}
+                    <Col
+                        lg="4"
+                        className={`pdp-image-galary ${isLargeScreen ? 'sticky-left' : ''}`}
+                    >
                         <div className="proName top">{safeGet(selectedChild, 'name')}</div>
                         <div className="productImgSection proDetailSec">
                             <ImageGallery
@@ -1322,51 +1463,103 @@ const ProductDetails = ({
                                 showNav={false}
                                 showFullscreenButton={false}
                                 showPlayButton={false}
-                                lazyLoad={true}
+                                lazyLoad
                                 infinite={false}
-                                useBrowserFullscreen={true}
-                                renderItem={(item) => (
+                                useBrowserFullscreen
+                                renderItem={item => (
                                     <div className="image-gallery-image">
-                                        <img src={item.original} alt={item.originalAlt} loading="lazy" style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
+                                        <img
+                                            src={item.original}
+                                            alt={item.originalAlt}
+                                            loading="lazy"
+                                            style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+                                        />
                                     </div>
                                 )}
                             />
-                            <Button className={`shareBtn ${isShareClicked ? 'clicked' : ''}`} onClick={handleShare}>
+                            <Button
+                                className={`shareBtn ${isShareClicked ? 'clicked' : ''}`}
+                                onClick={handleShare}
+                            >
                                 <ShareIcon />
-                                {showCopiedLabel && <div className="share-copied-label">Link copied!</div>}
+                                {showCopiedLabel && (
+                                    <div className="share-copied-label">Link copied!</div>
+                                )}
                             </Button>
                         </div>
                     </Col>
 
+                    {/* PRODUCT INFO */}
                     <Col className="pdp-info">
                         <div className="w-100">
                             <div className="proName mid">{safeGet(selectedChild, 'name')}</div>
 
+                            {/* RATING */}
                             <div className="rating-summary">
                                 <div className="rating-stars">
-                                    <span className="rating-value">4.5</span>
-                                    {[...Array(4)].map((_, i) => <StarIcon key={i} className="star full" />)}
-                                    <StarHalfIcon className="star half" />
+                                    <span className="rating-value">
+                                        {(() => {
+                                            const r = parseFloat(_get(selectedChild, 'reviews.rating_summary', 0)) || 0;
+                                            return r > 0 ? (r / 20).toFixed(1) : '0.0';
+                                        })()}
+                                    </span>
+                                    {(() => {
+                                        const r = parseFloat(_get(selectedChild, 'reviews.rating_summary', 0)) || 0;
+                                        const full = Math.floor(r / 20);
+                                        return [...Array(full)].map((_, i) => (
+                                            <StarIcon key={i} className="star full" />
+                                        ));
+                                    })()}
+                                    {(() => {
+                                        const r = parseFloat(_get(selectedChild, 'reviews.rating_summary', 0)) || 0;
+                                        return r % 20 >= 10 ? <StarHalfIcon className="star half" /> : null;
+                                    })()}
+                                    {(() => {
+                                        const r = parseFloat(_get(selectedChild, 'reviews.rating_summary', 0)) || 0;
+                                        const full = Math.floor(r / 20);
+                                        const hasHalf = r % 20 >= 10;
+                                        const empty = 5 - full - (hasHalf ? 1 : 0);
+                                        return [...Array(empty)].map((_, i) => (
+                                            <StarBorderIcon key={i} className="star empty" />
+                                        ));
+                                    })()}
                                     <ExpandMoreIcon className="dropdown-icon" />
-                                    <span className="rating-count">3 ratings</span>
+                                    <span className="rating-count">
+                                        {_get(selectedChild, 'reviews.review_count', '0 Reviews').replace(
+                                            ' Reviews',
+                                            ''
+                                        )}{' '}
+                                        ratings
+                                    </span>
                                 </div>
-                                <div className="bought-info"><strong>50 bought</strong> in past month</div>
+                                <div className="bought-info">
+                                    <strong>50 bought</strong> in past month
+                                </div>
                             </div>
 
                             <div className="pdpFormSection">
+                                {/* PRICE */}
                                 <div className="price-section">
                                     <span className="main-price">
                                         <span className="currency">$</span>
-                                        <span className="price-int">{Math.floor(parseFloat(state.price || 0))}</span>
-                                        <sup className="price-dec">{(parseFloat(state.price || 0) % 1).toFixed(2).split('.')[1]}</sup>
-                                        <span className="per-count">(${parseFloat(state.price || 0).toFixed(2)}/count)</span>
+                                        <span className="price-int">
+                                            {Math.floor(parseFloat(state.price || 0))}
+                                        </span>
+                                        <sup className="price-dec">
+                                            {(parseFloat(state.price || 0) % 1).toFixed(2).split('.')[1]}
+                                        </sup>
+                                        <span className="per-count">
+                                            (${parseFloat(state.price || 0).toFixed(2)}/count)
+                                        </span>
                                     </span>
                                 </div>
                                 <hr />
 
                                 {/* COLOR */}
                                 <div className="option-section">
-                                    <h4>Color <span className="selected">{selectedColor}</span></h4>
+                                    <h4>
+                                        Color <span className="selected">{selectedColor}</span>
+                                    </h4>
                                     <div className="option-grid">
                                         {colorOptions.map(opt => (
                                             <div
@@ -1384,32 +1577,26 @@ const ProductDetails = ({
 
                                 {/* SIZE */}
                                 <div className="option-section">
-                                    <h4>Size <span className="selected">{selectedSize}</span></h4>
+                                    <h4>
+                                        Size <span className="selected">{selectedSize}</span>
+                                    </h4>
                                     <div className="option-grid small">
                                         {sizeOptions
-                                            .sort((a, b) => {
-                                                // Convert to number for correct numeric sort (6 before 12)
-                                                const sizeA = parseFloat(a.name);
-                                                const sizeB = parseFloat(b.name);
-                                                return sizeA - sizeB;
-                                            })
+                                            .sort((a, b) => parseFloat(a.name) - parseFloat(b.name))
                                             .map(opt => {
-                                                const isSelected = String(selectedSize) === String(opt.name);
-
-                                                // Find the child that matches current color + this size
-                                                const childForSize = _find(children, c =>
-                                                    _get(c, 'color_theme') === selectedColor &&
-                                                    String(_get(c, 'size')) === String(opt.name)
+                                                const isSel = String(selectedSize) === String(opt.name);
+                                                const childForSize = _find(
+                                                    children,
+                                                    c =>
+                                                        _get(c, 'color_theme') === selectedColor &&
+                                                        String(_get(c, 'size')) === String(opt.name)
                                                 );
-
-                                                // Get default active speed price
                                                 const speedObj = pickDefaultSpeed(_get(childForSize, 'speed_id', []));
                                                 const price = _get(speedObj, 'Price', _get(childForSize, 'price', 0));
-
                                                 return (
                                                     <div
                                                         key={opt.name}
-                                                        className={`option-card size ${isSelected ? 'selected' : ''}`}
+                                                        className={`option-card size ${isSel ? 'selected' : ''}`}
                                                         onClick={() => setSelectedSize(opt.name)}
                                                     >
                                                         <div className="size-label">{opt.name}</div>
@@ -1426,7 +1613,9 @@ const ProductDetails = ({
 
                                 {/* STYLE */}
                                 <div className="option-section">
-                                    <h4>Style <span className="selected">{selectedStyle}</span></h4>
+                                    <h4>
+                                        Style <span className="selected">{selectedStyle}</span>
+                                    </h4>
                                     <div className="option-grid">
                                         {styleOptions.map(opt => (
                                             <div
@@ -1434,7 +1623,11 @@ const ProductDetails = ({
                                                 className={`option-card ${selectedStyle === opt.name ? 'selected' : ''}`}
                                                 onClick={() => setSelectedStyle(opt.name)}
                                             >
-                                                <img src={_get(selectedChild, 'image[0].small_image', '')} alt={opt.name} className="option-img" />
+                                                <img
+                                                    src={_get(selectedChild, 'image[0].small_image', '')}
+                                                    alt={opt.name}
+                                                    className="option-img"
+                                                />
                                                 <hr />
                                                 <p>{opt.name}</p>
                                             </div>
@@ -1442,84 +1635,154 @@ const ProductDetails = ({
                                     </div>
                                 </div>
 
-                                {/* DELIVERY */}
-                                <div className="option-section">
-                                    <h4>Delivery By <span className="selected">{state.selectedSpeed || "N/A"}</span></h4>
-                                    <div className="option-grid">
-                                        {_get(selectedChild, "speed_id", []).map((option, index) => {
-                                            const isSelected = option.Type === state.selectedSpeed;
-                                            const isDisabled = !option.active;
-                                            const type = option.Type?.toLowerCase() || "";
-                                            const iconMap = {
-                                                "same day": <LocationOnIcon fontSize="large" />,
-                                                "next day": <LocalShippingIcon fontSize="large" />,
-                                                "farm direct": <NatureIcon fontSize="large" />,
-                                            };
-                                            const Icon = iconMap[type] || <LocationOnIcon fontSize="large" />;
-
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    className={`option-card ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}`}
-                                                    onClick={() => !isDisabled && onSpeedChange(option.Type)}
-                                                >
-                                                    <div className="option-icon">{Icon}</div>
-                                                    <p className="delivery-type">{option.Type}</p>
-                                                    <span className="delivery-note">
-                                                        {type === "same day" ? "Nationwide fast delivery" :
-                                                            type === "next day" ? "Hand delivery" :
-                                                                type === "farm direct" ? "Fresh from farm" : "N/A"}
-                                                    </span>
-                                                </div>
-                                            );
-                                        })}
+                                {/* DELIVERY OPTIONS */}
+                                {state.zipcodeVerified && (
+                                    <div className="option-section">
+                                        <h4>Delivery Options</h4>
+                                        {state.deliveryLoading ? (
+                                            <div className="delivery-loading">
+                                                <CircularProgress size={20} /> Checking...
+                                            </div>
+                                        ) : (
+                                            <div className="option-grid">
+                                                {state.deliveryOptions.local && (
+                                                    <div className="option-card selected">
+                                                        <LocationOnIcon fontSize="large" className="option-icon" />
+                                                        <p className="delivery-type">Same Day</p>
+                                                        <span className="delivery-note">Nationwide fast delivery</span>
+                                                    </div>
+                                                )}
+                                                {state.deliveryOptions.next_day && (
+                                                    <div className="option-card selected">
+                                                        <LocalShippingIcon fontSize="large" className="option-icon" />
+                                                        <p className="delivery-type">Next Day</p>
+                                                        <span className="delivery-note">Hand delivery</span>
+                                                    </div>
+                                                )}
+                                                {state.deliveryOptions.farm_direct && (
+                                                    <div className="option-card selected">
+                                                        <NatureIcon fontSize="large" className="option-icon" />
+                                                        <p className="delivery-type">Farm Direct</p>
+                                                        <span className="delivery-note">Fresh from farm</span>
+                                                    </div>
+                                                )}
+                                                {!state.deliveryOptions.local &&
+                                                    !state.deliveryOptions.next_day &&
+                                                    !state.deliveryOptions.farm_direct && (
+                                                        <p className="no-delivery">Delivery not available</p>
+                                                    )}
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
+                                )}
                             </div>
 
-                            {/* Product Info */}
-                            <div className="product-properties"><div className="label">Brand:</div><div>{safeGet(selectedChild, "brand_name")}</div></div>
-                            <div className="product-properties"><div className="label">Product Type:</div><div>{safeGet(selectedChild, "product_type")}</div></div>
-                            <div className="product-properties"><div className="label">Color:</div><div>{selectedColor}</div></div>
-                            <div className="product-properties"><div className="label">Size:</div><div>{selectedSize}</div></div>
-                            <div className="product-properties"><div className="label">Style:</div><div>{selectedStyle}</div></div>
+                            {/* PRODUCT PROPERTIES */}
+                            <div className="product-properties">
+                                <div className="label">Brand:</div>
+                                <div>{safeGet(selectedChild, 'brand_name')}</div>
+                            </div>
+                            <div className="product-properties">
+                                <div className="label">Color:</div>
+                                <div>{selectedColor}</div>
+                            </div>
+                            <div className="product-properties">
+                                <div className="label">Size:</div>
+                                <div>{selectedSize}</div>
+                            </div>
+                            <div className="product-properties">
+                                <div className="label">Style:</div>
+                                <div>{selectedStyle}</div>
+                            </div>
                             <hr />
                             <h1 className="sectionTitle">About this item:</h1>
-                            <div className="product-description">{safeGet(selectedChild, 'short_description')}</div>
+                            <div className="product-description">
+                                {safeGet(selectedChild, 'short_description')}
+                            </div>
                             <hr />
                         </div>
                     </Col>
 
-                    <Col lg="3" className={`pdp-buy ${isLargeScreen ? 'sticky-right' : ''}`}>
+                    {/* BUY BOX */}
+                    <Col
+                        lg="3"
+                        className={`pdp-buy ${isLargeScreen ? 'sticky-right' : ''}`}
+                    >
                         <div className="free-delivery-banner">
                             <div className="price-section">
                                 <span className="main-price">
                                     <span className="currency">$</span>
-                                    <span className="price-int">{Math.floor(parseFloat(state.price || 0))}</span>
-                                    <sup className="price-dec">{(parseFloat(state.price || 0) % 1).toFixed(2).split('.')[1]}</sup>
-                                    <span className="per-count">(${parseFloat(state.price || 0).toFixed(2)}/count)</span>
+                                    <span className="price-int">
+                                        {Math.floor(parseFloat(state.price || 0))}
+                                    </span>
+                                    <sup className="price-dec">
+                                        {(parseFloat(state.price || 0) % 1).toFixed(2).split('.')[1]}
+                                    </sup>
+                                    <span className="per-count">
+                                        (${parseFloat(state.price || 0).toFixed(2)}/count)
+                                    </span>
                                 </span>
                             </div>
+
                             <div className="location">
                                 <ZipcodeInput
                                     zipcode={state.zipcode}
-                                    onCheck={onZipLookup}
-                                    onZipChange={() => setState(prev => ({ ...prev, zipcodeVerified: false, zipCodeMessage: '' }))}
-                                    loading={state.zipcodeLoading}
+                                    onCheck={checkDeliveryOptions}
+                                    onZipChange={() =>
+                                        setState(prev => ({
+                                            ...prev,
+                                            zipcodeVerified: false,
+                                            zipCodeMessage: '',
+                                            deliveryOptions: {
+                                                local: false,
+                                                next_day: false,
+                                                farm_direct: false,
+                                                serviceable_zipcode: false,
+                                            },
+                                            deliveryLoading: false,
+                                        }))
+                                    }
+                                    loading={state.deliveryLoading}
                                     verified={state.zipcodeVerified}
-                                    zipcodeLength={ZIPCODE_LENGTH}
                                     message={state.zipCodeMessage}
+                                    zipcodeLength={ZIPCODE_LENGTH}
+                                    disabled={!selectedChild.id}
                                 />
                             </div>
-                            <div className="stock-status">{safeGet(selectedChild, 'stock_availability')}</div>
-                            {!zipVerified && <div className="zip-required-message">Please enter and verify your zip code to buy.</div>}
-                            {zipVerified && (
+
+                            <div className="stock-status">
+                                {safeGet(selectedChild, 'stock_availability')}
+                            </div>
+
+                            {!selectedChild.id ? (
+                                <div className="text-center p-3">
+                                    <CircularProgress size={20} /> Loading product...
+                                </div>
+                            ) : !zipVerified ? (
+                                <div className="zip-required-message">Verify zip code to buy</div>
+                            ) : (
                                 <>
                                     <div className="quantity-selector">
-                                        <QuantitySelector value={state.defaultQuantity} onChange={onQuantityChange} disabled={!inStock} max={24} />
+                                        <QuantitySelector
+                                            value={state.defaultQuantity}
+                                            onChange={onQuantityChange}
+                                            disabled={!inStock}
+                                            max={24}
+                                        />
                                     </div>
-                                    <Button className="buy-now-btn" disabled={!inStock || state.addToCartLoading} onClick={onAddToCart}>
-                                        {state.addToCartLoading ? <CircularProgress size={12} /> : inStock ? 'Buy Now' : 'OUT OF STOCK'}
+
+                                    <Button
+                                        className="buy-now-btn"
+                                        disabled={!inStock || state.addToCartLoading}
+                                        onClick={onAddToCart}
+                                    >
+                                        {state.addToCartLoading ? (
+                                            <CircularProgress size={12} />
+                                        ) : inStock ? (
+                                            'Buy Now'
+                                        ) : (
+                                            'OUT OF STOCK'
+                                        )}
                                     </Button>
                                 </>
                             )}
@@ -1527,27 +1790,31 @@ const ProductDetails = ({
                     </Col>
                 </Row>
             </Container>
+
             <hr />
-            <ManufacturerInfo />
+            <ManufacturerInfo productData={selectedChild} />
             <hr />
-            <div className='prod-des'>
+            <div className="prod-des">
                 <h3>Product Description</h3>
-                <p>{safeGet(selectedChild, "description")}</p>
+                <p>{safeGet(selectedChild, 'description')}</p>
             </div>
             <hr />
-            <ProductCard />
+            <ProductCard selectedChild={selectedChild} />
             <hr />
-            <div className='prod-des'>
+            <div className="prod-des">
                 <h3>Important information</h3>
                 <h5>Legal Disclaimer</h5>
-                <p>Statements regarding dietary supplements have not been evaluated by the FDA...</p>
+                <p>
+                    Statements regarding dietary supplements have not been evaluated by the FDA...
+                </p>
             </div>
             <hr />
-            <ReviewsComponent />
+            <ReviewsComponent selectedChild={selectedChild} />
         </div>
     );
 };
 
+/* ------------------------------------------------------------------ */
 const mapStateToProps = state => ({
     productDetailsData: _get(state, 'productDetails.lookUpData', {}),
     userSignInInfo: _get(state, 'userSignInInfo.lookUpData', []),
